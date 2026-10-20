@@ -16,7 +16,7 @@ import {
 import AppLayout from '../../Layouts/AppLayout.vue';
 import PageHeader from '../../Components/PageHeader.vue';
 import EmptyState from '../../Components/EmptyState.vue';
-import { attendanceClass, formatDate } from '../../lib/labels';
+import { attendanceClass, formatDate, initials } from '../../lib/labels';
 
 const props = defineProps({
     classrooms: { type: Array, default: () => [] },
@@ -137,12 +137,12 @@ function submit() {
 
         <section class="card p-4">
             <div class="grid gap-3 lg:grid-cols-12">
-                <div class="lg:col-span-3">
+                <div class="lg:col-span-4">
                     <label class="label">Tanggal</label>
-                    <div class="flex gap-1.5">
-                        <button type="button" class="btn-secondary !px-2.5" aria-label="Hari sebelumnya" @click="shiftDate(-1)"><ChevronLeft class="h-4 w-4" /></button>
-                        <input v-model="filters.date" type="date" class="field flex-1" @change="applyFilters({ date: filters.date })" />
-                        <button type="button" class="btn-secondary !px-2.5" aria-label="Hari berikutnya" @click="shiftDate(1)"><ChevronRight class="h-4 w-4" /></button>
+                    <div class="flex items-center gap-1.5">
+                        <button type="button" class="btn-secondary shrink-0 !px-2.5" aria-label="Hari sebelumnya" @click="shiftDate(-1)"><ChevronLeft class="h-4 w-4" /></button>
+                        <input v-model="filters.date" type="date" class="field min-w-[135px] flex-1" @change="applyFilters({ date: filters.date })" />
+                        <button type="button" class="btn-secondary shrink-0 !px-2.5" aria-label="Hari berikutnya" @click="shiftDate(1)"><ChevronRight class="h-4 w-4" /></button>
                     </div>
                 </div>
                 <div class="lg:col-span-3">
@@ -151,13 +151,13 @@ function submit() {
                         <option v-for="(label, value) in options.attendance_types" :key="value" :value="value">{{ label }}</option>
                     </select>
                 </div>
-                <div v-if="!isDormType" class="lg:col-span-3">
+                <div v-if="!isDormType" class="lg:col-span-2">
                     <label class="label">Kelas</label>
                     <select v-model="filters.classroom_id" class="field" @change="applyFilters({ classroom_id: filters.classroom_id })">
                         <option v-for="classroom in classrooms" :key="classroom.id" :value="classroom.id">{{ classroom.name }}</option>
                     </select>
                 </div>
-                <div v-else class="lg:col-span-3">
+                <div v-else class="lg:col-span-2">
                     <label class="label">Asrama</label>
                     <select v-model="filters.dorm_id" class="field" @change="applyFilters({ dorm_id: filters.dorm_id })">
                         <option v-for="dorm in dorms" :key="dorm.id" :value="dorm.id">{{ dorm.name }}</option>
@@ -207,12 +207,22 @@ function submit() {
                         <tr v-for="(row, index) in rows" :key="row.id" class="align-top transition hover:bg-slate-50/70">
                             <td class="px-4 py-3 text-slate-400">{{ index + 1 }}</td>
                             <td class="px-4 py-3">
-                                <p class="font-semibold text-slate-800">{{ row.name }}</p>
-                                <div class="mt-0.5 flex items-center gap-1.5">
-                                    <span class="font-mono text-[10px] text-slate-400">{{ row.code }}</span>
-                                    <span v-if="row.saved" class="inline-flex items-center gap-0.5 rounded-full bg-emerald-50 px-1.5 py-0.5 text-[9px] font-bold text-emerald-700">
-                                        Tersimpan
-                                    </span>
+                                <div class="flex items-center gap-2.5">
+                                    <div class="relative h-8 w-8 shrink-0 overflow-hidden rounded-full ring-1 ring-slate-200">
+                                        <img v-if="row.photo_url" :src="row.photo_url" :alt="row.name" class="h-full w-full object-cover" />
+                                        <span v-else class="grid h-full w-full place-items-center bg-teal-50 text-[10px] font-bold text-teal-700">
+                                            {{ initials(row.name) }}
+                                        </span>
+                                    </div>
+                                    <div class="min-w-0">
+                                        <p class="font-semibold text-slate-800">{{ row.name }}</p>
+                                        <div class="mt-0.5 flex items-center gap-1.5">
+                                            <span class="font-mono text-[10px] text-slate-400">{{ row.code }}</span>
+                                            <span v-if="row.saved" class="inline-flex items-center gap-0.5 rounded-full bg-emerald-50 px-1.5 py-0.5 text-[9px] font-bold text-emerald-700">
+                                                Tersimpan
+                                            </span>
+                                        </div>
+                                    </div>
                                 </div>
                             </td>
                             <td class="whitespace-nowrap px-4 py-3 text-slate-500">

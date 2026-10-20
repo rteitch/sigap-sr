@@ -49,20 +49,20 @@ function submit() {
 </script>
 
 <template>
-    <Head :title="isEdit ? 'Ubah pengguna' : 'Tambah pengguna'" />
+    <Head :title="isEdit ? 'Ubah staf / guru' : 'Tambah staf / guru'" />
 
     <AppLayout>
         <PageHeader
-            :title="isEdit ? 'Ubah pengguna' : 'Tambah pengguna'"
-            description="Akun staf harus menggunakan identitas yang jelas dan peran sesuai tugas."
-            eyebrow="Administrasi"
+            :title="isEdit ? 'Ubah staf / guru' : 'Tambah staf / guru'"
+            description="Akun guru, wali kelas, wali asrama, dan staf kependidikan harus menggunakan identitas resmi dan peran sesuai tugas."
+            eyebrow="Administrasi & Ketenagaan"
         >
             <template #actions>
                 <Link href="/admin/users" class="btn-secondary"><ArrowLeft class="h-4 w-4" /> Kembali</Link>
                 <button type="button" class="btn-primary" :disabled="form.processing" @click="submit">
                     <Loader2 v-if="form.processing" class="h-4 w-4 animate-spin" />
                     <Save v-else class="h-4 w-4" />
-                    {{ form.processing ? 'Menyimpan…' : 'Simpan pengguna' }}
+                    {{ form.processing ? 'Menyimpan…' : 'Simpan data staf' }}
                 </button>
             </template>
         </PageHeader>
@@ -86,16 +86,16 @@ function submit() {
                         <div>
                             <label class="label" for="email">Email</label>
                             <div class="relative">
-                                <Mail class="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
-                                <input id="email" v-model="form.email" type="email" class="field !pl-9" placeholder="nama@sigap.test" required />
+                                <Mail class="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+                                <input id="email" v-model="form.email" type="email" class="field pl-10" placeholder="nama@sigap.test" required />
                             </div>
                             <p v-if="form.errors.email" class="mt-1.5 text-xs font-medium text-rose-600">{{ form.errors.email }}</p>
                         </div>
                         <div>
                             <label class="label" for="phone">Nomor telepon</label>
                             <div class="relative">
-                                <Phone class="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
-                                <input id="phone" v-model="form.phone" type="tel" class="field !pl-9" placeholder="08xx" />
+                                <Phone class="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+                                <input id="phone" v-model="form.phone" type="tel" class="field pl-10" placeholder="08xx" />
                             </div>
                         </div>
                     </div>

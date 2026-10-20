@@ -1,6 +1,6 @@
 <script setup>
 import { computed, ref } from 'vue';
-import { Head, useForm, usePage } from '@inertiajs/vue3';
+import { Head, Link, useForm, usePage } from '@inertiajs/vue3';
 import { Eye, EyeOff, KeyRound, LockKeyhole, Mail, ShieldCheck, Sparkles } from '@lucide/vue';
 import BrandMark from '../../Components/BrandMark.vue';
 
@@ -40,11 +40,10 @@ function submit() {
             <div class="absolute -bottom-32 -left-20 h-96 w-96 rounded-full bg-emerald-400/10 blur-3xl"></div>
             <div class="relative flex h-full flex-col justify-between p-12">
                 <div class="flex items-center gap-3 text-white">
-                    <span class="grid h-11 w-11 place-items-center overflow-hidden rounded-2xl bg-white/10 ring-1 ring-white/20">
-                        <img v-if="branding.logo_url" :src="branding.logo_url" alt="Logo sekolah" class="h-full w-full bg-white object-contain p-0.5" />
-                        <ShieldCheck v-else class="h-7 w-7" />
+                    <span class="grid h-11 w-11 shrink-0 place-items-center overflow-hidden rounded-2xl bg-white/10 ring-1 ring-white/20">
+                        <img :src="branding.logo_url || '/icon.svg'" :alt="'Logo ' + (branding.school_name || branding.app_name || 'SIGAP-SR')" class="h-full w-full object-contain" :class="branding.logo_url ? 'bg-white p-0.5' : ''" />
                     </span>
-                    <div class="min-w-0">
+                    <div class="min-w-0 flex-1">
                         <p class="truncate text-lg font-bold tracking-tight">{{ branding.app_name || 'SIGAP-SR' }}</p>
                         <p class="truncate text-xs text-brand-100/80">{{ branding.school_name || 'Sekolah Rakyat' }}</p>
                     </div>
@@ -160,7 +159,13 @@ function submit() {
                     Aplikasi ini memuat data anak. Jangan berbagi akun, jangan mengambil tangkapan layar berisi identitas, dan selalu keluar setelah selesai.
                 </p>
 
-                <p class="mt-4 text-[11px] text-slate-400">
+                <div class="mt-4 flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-slate-500">
+                    <Link href="/kebijakan-privasi" class="underline hover:text-brand-700">Kebijakan Privasi</Link>
+                    <span>·</span>
+                    <Link href="/persyaratan-layanan" class="underline hover:text-brand-700">Persyaratan Layanan</Link>
+                </div>
+
+                <p class="mt-3 text-[11px] text-slate-400">
                     Dikembangkan oleh <span class="font-semibold text-slate-600">{{ branding.developer?.name || 'Rizal Taufiq Hidayat' }}</span>
                     · v{{ branding.version || '1.0.0' }}
                 </p>

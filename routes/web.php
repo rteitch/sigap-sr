@@ -12,8 +12,10 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DormController;
 use App\Http\Controllers\HealthController;
 use App\Http\Controllers\IncidentController;
+use App\Http\Controllers\LegalController;
 use App\Http\Controllers\ManifestController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\StudentController;
 use Illuminate\Support\Facades\Auth;
@@ -31,6 +33,9 @@ Route::middleware('throttle:health')->group(function (): void {
 Route::view('/api/docs', 'api-docs')->name('api.docs');
 Route::get('/api/openapi.json', OpenApiController::class)->name('api.openapi');
 
+Route::get('/kebijakan-privasi', [LegalController::class, 'privacy'])->name('legal.privacy');
+Route::get('/persyaratan-layanan', [LegalController::class, 'terms'])->name('legal.terms');
+
 Route::get('/', function () {
     return Auth::check()
         ? redirect()->route('dashboard')
@@ -47,6 +52,10 @@ Route::middleware('guest')->group(function () {
 Route::middleware('auth')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
     Route::get('/dashboard', DashboardController::class)->name('dashboard');
+
+    Route::get('/profil', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profil', [ProfileController::class, 'update'])->name('profile.update');
+    Route::put('/profil/password', [ProfileController::class, 'updatePassword'])->name('profile.password');
 
     Route::get('/notifikasi', [NotificationController::class, 'index'])->name('notifications.index');
     Route::post('/notifikasi/baca-semua', [NotificationController::class, 'markAllRead'])->name('notifications.read-all');
@@ -77,6 +86,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/insiden', [IncidentController::class, 'store'])->name('incidents.store');
     Route::get('/insiden/{incident}', [IncidentController::class, 'show'])->name('incidents.show');
     Route::patch('/insiden/{incident}', [IncidentController::class, 'update'])->name('incidents.update');
+    Route::post('/insiden/{incident}/tugas', [IncidentController::class, 'storeTask'])->name('incidents.tasks.store');
     Route::patch('/insiden/{incident}/tugas/{task}', [IncidentController::class, 'toggleTask'])->name('incidents.tasks.toggle');
     Route::patch('/insiden/{incident}/tindak-lanjut/{followup}', [IncidentController::class, 'completeFollowup'])->name('incidents.followups.complete');
 

@@ -162,8 +162,8 @@ function studentLabel(student) {
                         <div>
                             <label class="label" for="location">Lokasi</label>
                             <div class="relative">
-                                <MapPin class="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
-                                <select id="location" v-model="form.location_id" class="field !pl-9" required>
+                                <MapPin class="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+                                <select id="location" v-model="form.location_id" class="field pl-10 pr-10" required>
                                     <option value="" disabled>Pilih lokasi…</option>
                                     <option v-for="location in locations" :key="location.id" :value="location.id">{{ location.name }}</option>
                                 </select>
@@ -268,7 +268,7 @@ function studentLabel(student) {
                         <div v-for="(participant, index) in form.participants" :key="index" class="rounded-xl border border-slate-200 p-3">
                             <div class="flex items-center justify-between gap-2">
                                 <p class="text-[10px] font-bold uppercase tracking-wide text-slate-400">Siswa {{ index + 1 }}</p>
-                                <button v-if="form.participants.length > 1" type="button" class="rounded-lg p-1 text-slate-400 hover:bg-rose-50 hover:text-rose-600" @click="removeParticipant(index)">
+                                <button v-if="form.participants.length > 1" type="button" class="rounded-lg p-1 text-slate-400 hover:bg-rose-50 hover:text-rose-600" title="Hapus siswa" aria-label="Hapus siswa dari daftar" @click="removeParticipant(index)">
                                     <Trash2 class="h-3.5 w-3.5" />
                                 </button>
                             </div>

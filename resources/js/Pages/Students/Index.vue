@@ -112,7 +112,7 @@ const hasFilters = computed(() => filter.q || filter.classroom_id || filter.stat
                     <button type="submit" class="btn-primary flex-1">
                         <Filter class="h-4 w-4" /> Terapkan
                     </button>
-                    <button v-if="hasFilters" type="button" class="btn-secondary !px-3" title="Reset filter" @click="resetFilters">
+                    <button v-if="hasFilters" type="button" class="btn-secondary !px-3" title="Reset filter" aria-label="Reset filter" @click="resetFilters">
                         <X class="h-4 w-4" />
                     </button>
                 </div>
@@ -144,12 +144,18 @@ const hasFilters = computed(() => filter.q || filter.classroom_id || filter.stat
                         <tr v-for="student in students.data" :key="student.id" class="transition hover:bg-slate-50/80">
                             <td class="px-4 py-3 sm:px-5">
                                 <div class="flex items-center gap-3">
-                                    <span class="grid h-9 w-9 shrink-0 place-items-center rounded-full" :class="student.gender === 'P' ? 'bg-rose-50 text-rose-600' : 'bg-sky-50 text-sky-600'">
-                                        <span class="text-[11px] font-bold">{{ initials(student.name) }}</span>
-                                    </span>
+                                    <div class="relative h-9 w-9 shrink-0 overflow-hidden rounded-full ring-1 ring-slate-200">
+                                        <img v-if="student.photo_url" :src="student.photo_url" :alt="student.name" class="h-full w-full object-cover" />
+                                        <span v-else class="grid h-full w-full place-items-center" :class="student.gender === 'P' ? 'bg-rose-50 text-rose-600' : 'bg-teal-50 text-teal-700'">
+                                            <span class="text-[11px] font-bold">{{ initials(student.name) }}</span>
+                                        </span>
+                                    </div>
                                     <div class="min-w-0">
                                         <p class="truncate text-sm font-semibold text-slate-800">{{ student.name }}</p>
-                                        <p class="text-[11px] text-slate-400">{{ student.code }} · {{ options.genders[student.gender] }}</p>
+                                        <p class="text-[11px] text-slate-400">
+                                            {{ student.code }} · {{ options.genders[student.gender] }}
+                                            <span v-if="student.age"> · {{ student.age }} thn</span>
+                                        </p>
                                     </div>
                                 </div>
                             </td>

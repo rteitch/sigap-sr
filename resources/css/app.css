@@ -31,19 +31,15 @@ body {
     color: oklch(0.25 0.04 183);
 }
 
-@layer utilities {
-    .no-scrollbar::-webkit-scrollbar {
-        display: none;
-    }
-    .no-scrollbar {
-        -ms-overflow-style: none;
-        scrollbar-width: none;
-    }
+@layer components {
     .card {
         @apply rounded-2xl border border-slate-200/80 bg-white shadow-sm;
     }
     .field {
         @apply w-full rounded-xl border border-slate-300 bg-white px-3.5 py-2.5 text-sm text-slate-900 shadow-sm outline-none transition placeholder:text-slate-400 focus:border-brand-500 focus:ring-4 focus:ring-brand-500/10;
+    }
+    select.field {
+        @apply pr-10 cursor-pointer;
     }
     .label {
         @apply mb-1.5 block text-xs font-semibold uppercase tracking-wide text-slate-500;
@@ -62,6 +58,30 @@ body {
     }
     .table-head {
         @apply bg-slate-50/80 text-left text-[11px] font-bold uppercase tracking-wider text-slate-500;
+    }
+}
+
+@layer utilities {
+    .no-scrollbar::-webkit-scrollbar {
+        display: none;
+    }
+    .no-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+    .has-icon-left,
+    .pl-10 {
+        padding-left: 2.5rem !important;
+    }
+    .pl-11 {
+        padding-left: 2.75rem !important;
+    }
+    .has-icon-right,
+    .pr-10 {
+        padding-right: 2.5rem !important;
+    }
+    .pr-11 {
+        padding-right: 2.75rem !important;
     }
 }
 

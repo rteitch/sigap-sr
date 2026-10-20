@@ -9,6 +9,7 @@ import {
     FileText,
     HeartHandshake,
     Home,
+    MapPin,
     Pencil,
     Phone,
     Plus,
@@ -81,12 +82,18 @@ const age = computed(() => {
                     <div class="bg-gradient-to-r from-brand-800 via-brand-700 to-brand-600 px-5 py-5 text-white">
                         <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                             <div class="flex items-center gap-4">
-                                <span class="grid h-14 w-14 place-items-center rounded-2xl bg-white/15 text-lg font-bold ring-1 ring-white/20">
-                                    {{ initials(student.full_name) }}
-                                </span>
+                                <div class="relative h-16 w-16 shrink-0 overflow-hidden rounded-2xl border-2 border-white/20 bg-white/10 shadow-sm">
+                                    <img v-if="student.photo_url" :src="student.photo_url" :alt="student.full_name" class="h-full w-full object-cover" />
+                                    <span v-else class="grid h-full w-full place-items-center text-lg font-bold text-white">
+                                        {{ initials(student.full_name) }}
+                                    </span>
+                                </div>
                                 <div>
                                     <p class="text-lg font-bold">{{ student.full_name }}</p>
-                                    <p class="mt-0.5 text-xs text-brand-100/80">{{ options.genders[student.gender] }} · {{ age !== null ? `${age} tahun` : 'Usia belum dicatat' }}</p>
+                                    <p class="mt-0.5 text-xs text-brand-100/80">
+                                        {{ options.genders[student.gender] }} · {{ age !== null ? `${age} tahun` : 'Usia belum dicatat' }}
+                                        <span v-if="student.nickname"> (panggilan: {{ student.nickname }})</span>
+                                    </p>
                                 </div>
                             </div>
                             <div class="flex flex-wrap gap-2">
@@ -117,9 +124,21 @@ const age = computed(() => {
                         <div class="flex gap-2.5">
                             <CalendarDays class="mt-0.5 h-4 w-4 shrink-0 text-slate-400" />
                             <div>
-                                <p class="text-[11px] font-semibold uppercase tracking-wide text-slate-400">Tanggal masuk</p>
-                                <p class="mt-0.5 text-sm font-semibold text-slate-800">{{ formatDate(student.entry_date) }}</p>
-                                <p class="text-[11px] text-slate-500">Lahir {{ formatDate(student.birth_date) }}</p>
+                                <p class="text-[11px] font-semibold uppercase tracking-wide text-slate-400">Kelahiran &amp; Usia</p>
+                                <p class="mt-0.5 text-sm font-semibold text-slate-800">
+                                    {{ student.birth_date ? formatDate(student.birth_date) : 'Belum tercatat' }}
+                                </p>
+                                <p class="text-[11px] text-slate-500">
+                                    {{ student.birth_place ? `di ${student.birth_place}` : '' }}
+                                    {{ age !== null ? `(${age} tahun)` : '' }}
+                                </p>
+                            </div>
+                        </div>
+                        <div v-if="student.address" class="col-span-full border-t border-slate-100 pt-3 flex gap-2.5">
+                            <MapPin class="mt-0.5 h-4 w-4 shrink-0 text-slate-400" />
+                            <div>
+                                <p class="text-[11px] font-semibold uppercase tracking-wide text-slate-400">Alamat domisili keluarga</p>
+                                <p class="mt-0.5 text-xs text-slate-700 leading-relaxed">{{ student.address }}</p>
                             </div>
                         </div>
                     </div>

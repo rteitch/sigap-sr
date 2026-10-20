@@ -55,7 +55,7 @@ class AttendanceController extends Controller
         $studentsQuery = Student::query()
             ->where('school_id', $schoolId)
             ->where('status', 'aktif')
-            ->with(['identity:id,student_id,full_name', 'classroom:id,name', 'dorm:id,name'])
+            ->with(['identity:id,student_id,full_name,photo_path', 'classroom:id,name', 'dorm:id,name'])
             ->orderBy('code');
 
         if ($isDormType) {
@@ -89,6 +89,7 @@ class AttendanceController extends Controller
                 'id' => $student->id,
                 'code' => $student->code,
                 'name' => $student->identity?->full_name ?? $student->code,
+                'photo_url' => $student->photo_url,
                 'classroom' => $student->classroom?->name,
                 'dorm' => $student->dorm?->name,
                 'status' => $records->get($student->id)?->status ?? 'hadir',

@@ -18,8 +18,10 @@ class UserController extends Controller
     {
         $users = User::query()
             ->where('school_id', $request->user()->school_id)
+            ->with(['homeroomClasses:id,name,level,homeroom_teacher_id', 'dormAssignments:id,name,gender,wali_id'])
             ->orderBy('name')
             ->paginate(20)
+            ->withQueryString()
             ->through(fn (User $user) => [
                 'id' => $user->id,
                 'name' => $user->name,
@@ -29,6 +31,16 @@ class UserController extends Controller
                 'role_label' => $user->roleLabel(),
                 'is_active' => $user->is_active,
                 'last_login_at' => $user->last_login_at?->toIso8601String(),
+                'homeroom_classes' => $user->homeroomClasses->map(fn ($c) => [
+                    'id' => $c->id,
+                    'name' => $c->name,
+                    'level' => $c->level,
+                ]),
+                'dorm_assignments' => $user->dormAssignments->map(fn ($d) => [
+                    'id' => $d->id,
+                    'name' => $d->name,
+                    'gender' => $d->gender,
+                ]),
             ]);
 
         return Inertia::render('Admin/Users/Index', [

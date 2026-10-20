@@ -7,10 +7,12 @@ use App\Models\Dorm;
 use App\Models\Incident;
 use App\Models\Student;
 use App\Services\AuditLogger;
+use Illuminate\Database\UniqueConstraintViolationException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -69,37 +71,60 @@ class StudentController extends Controller
         $this->authorizeManage($request);
         $data = $this->validated($request, null);
 
-        $student = DB::transaction(function () use ($request, $data) {
-            $student = Student::create([
-                'school_id' => $request->user()->school_id,
-                'classroom_id' => $data['classroom_id'] ?? null,
-                'dorm_id' => $data['dorm_id'] ?? null,
-                'code' => $data['code'] ?: $this->nextCode($request->user()->school_id),
-                'gender' => $data['gender'],
-                'birth_date' => $data['birth_date'] ?? null,
-                'entry_date' => $data['entry_date'] ?? null,
-                'status' => $data['status'],
-                'special_needs' => $data['special_needs'] ?? null,
-                'socioeconomic_desil' => $data['socioeconomic_desil'] ?? null,
-                'consent_given_at' => $data['consent_given_at'] ?? null,
-                'consent_scope' => $data['consent_scope'] ?? null,
-                'consent_document' => $data['consent_document'] ?? null,
-                'consent_withdrawn_at' => $data['consent_withdrawn_at'] ?? null,
-                'created_by' => $request->user()->id,
-            ]);
+        $photoPath = null;
+        if ($request->hasFile('photo')) {
+            $photoPath = $request->file('photo')->store('avatars', 'branding');
+        }
 
-            $student->identity()->create([
-                'full_name' => $data['full_name'],
-                'nickname' => $data['nickname'] ?? null,
-                'birth_place' => $data['birth_place'] ?? null,
-                'address' => $data['address'] ?? null,
-                'notes' => $data['identity_notes'] ?? null,
-            ]);
+        $autoGenerateCode = empty($data['code']);
+        $maxAttempts = $autoGenerateCode ? 5 : 1;
+        $student = null;
 
-            $this->syncContacts($student, $data['contacts'] ?? []);
+        for ($attempt = 1; $attempt <= $maxAttempts; $attempt++) {
+            try {
+                $code = $data['code'] ?: $this->nextCode($request->user()->school_id);
 
-            return $student;
-        });
+                $student = DB::transaction(function () use ($request, $data, $photoPath, $code) {
+                    $student = Student::create([
+                        'school_id' => $request->user()->school_id,
+                        'classroom_id' => $data['classroom_id'] ?? null,
+                        'dorm_id' => $data['dorm_id'] ?? null,
+                        'code' => $code,
+                        'gender' => $data['gender'],
+                        'birth_date' => $data['birth_date'] ?? null,
+                        'entry_date' => $data['entry_date'] ?? null,
+                        'status' => $data['status'],
+                        'special_needs' => $data['special_needs'] ?? null,
+                        'socioeconomic_desil' => $data['socioeconomic_desil'] ?? null,
+                        'consent_given_at' => $data['consent_given_at'] ?? null,
+                        'consent_scope' => $data['consent_scope'] ?? null,
+                        'consent_document' => $data['consent_document'] ?? null,
+                        'consent_withdrawn_at' => $data['consent_withdrawn_at'] ?? null,
+                        'created_by' => $request->user()->id,
+                    ]);
+
+                    $student->identity()->create([
+                        'full_name' => $data['full_name'],
+                        'nickname' => $data['nickname'] ?? null,
+                        'birth_place' => $data['birth_place'] ?? null,
+                        'address' => $data['address'] ?? null,
+                        'notes' => $data['identity_notes'] ?? null,
+                        'photo_path' => $photoPath,
+                    ]);
+
+                    $this->syncContacts($student, $data['contacts'] ?? []);
+
+                    return $student;
+                });
+
+                break;
+            } catch (UniqueConstraintViolationException $e) {
+                if ($attempt === $maxAttempts) {
+                    throw $e;
+                }
+                usleep(20000);
+            }
+        }
 
         AuditLogger::record('student.created', $student, 'Data siswa baru ditambahkan.');
 
@@ -223,11 +248,30 @@ class StudentController extends Controller
             ])->withInput();
         }
 
-        DB::transaction(function () use ($student, $data) {
+        $student->loadMissing('identity');
+        $oldPhoto = $student->identity?->photo_path;
+        $photoPath = $oldPhoto;
+
+        if ($request->boolean('remove_photo') && $oldPhoto) {
+            Storage::disk('branding')->delete($oldPhoto);
+            $photoPath = null;
+        }
+
+        if ($request->hasFile('photo')) {
+            $newPath = $request->file('photo')->store('avatars', 'branding');
+            if ($newPath !== false) {
+                if ($oldPhoto) {
+                    Storage::disk('branding')->delete($oldPhoto);
+                }
+                $photoPath = $newPath;
+            }
+        }
+
+        DB::transaction(function () use ($student, $data, $photoPath) {
             $student->update([
                 'classroom_id' => $data['classroom_id'] ?? null,
                 'dorm_id' => $data['dorm_id'] ?? null,
-                'code' => $data['code'] ?: $student->code,
+                'code' => ! empty($data['code']) ? $data['code'] : $student->code,
                 'gender' => $data['gender'],
                 'birth_date' => $data['birth_date'] ?? null,
                 'entry_date' => $data['entry_date'] ?? null,
@@ -248,6 +292,7 @@ class StudentController extends Controller
                     'birth_place' => $data['birth_place'] ?? null,
                     'address' => $data['address'] ?? null,
                     'notes' => $data['identity_notes'] ?? null,
+                    'photo_path' => $photoPath,
                 ]
             );
 
@@ -497,6 +542,8 @@ class StudentController extends Controller
             'socioeconomic_desil' => ['nullable', 'integer', 'between:1,10'],
             'address' => ['nullable', 'string', 'max:1000'],
             'identity_notes' => ['nullable', 'string', 'max:1000'],
+            'photo' => ['nullable', 'file', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
+            'remove_photo' => ['nullable', 'boolean'],
             'consent_given_at' => ['nullable', 'date'],
             'consent_scope' => ['nullable', 'string', 'max:255'],
             'consent_document' => ['nullable', 'string', 'max:255'],
@@ -551,8 +598,15 @@ class StudentController extends Controller
     {
         return Classroom::query()
             ->where('school_id', $request->user()->school_id)
+            ->with(['homeroomTeacher:id,name'])
             ->orderBy('name')
-            ->get(['id', 'name', 'level'])
+            ->get()
+            ->map(fn (Classroom $c) => [
+                'id' => $c->id,
+                'name' => $c->name,
+                'level' => $c->level,
+                'homeroom_teacher' => $c->homeroomTeacher?->name,
+            ])
             ->toArray();
     }
 
@@ -560,8 +614,15 @@ class StudentController extends Controller
     {
         return Dorm::query()
             ->where('school_id', $request->user()->school_id)
+            ->with(['wali:id,name'])
             ->orderBy('name')
-            ->get(['id', 'name', 'gender'])
+            ->get()
+            ->map(fn (Dorm $d) => [
+                'id' => $d->id,
+                'name' => $d->name,
+                'gender' => $d->gender,
+                'wali_name' => $d->wali?->name,
+            ])
             ->toArray();
     }
 
@@ -571,7 +632,10 @@ class StudentController extends Controller
             'id' => $student->id,
             'code' => $student->code,
             'name' => $student->identity?->full_name,
+            'photo_url' => $student->photo_url,
             'gender' => $student->gender,
+            'birth_date' => $student->birth_date?->toDateString(),
+            'age' => $student->age,
             'classroom' => $student->classroom?->name,
             'level' => $student->classroom?->level,
             'dorm' => $student->dorm?->name,
@@ -587,8 +651,14 @@ class StudentController extends Controller
             'id' => $student->id,
             'code' => $student->code,
             'full_name' => $student->identity?->full_name,
+            'nickname' => $student->identity?->nickname,
+            'photo_url' => $student->photo_url,
             'gender' => $student->gender,
             'birth_date' => $student->birth_date?->toDateString(),
+            'birth_place' => $student->identity?->birth_place,
+            'age' => $student->age,
+            'address' => $student->identity?->address,
+            'identity_notes' => $student->identity?->notes,
             'entry_date' => $student->entry_date?->toDateString(),
             'status' => $student->status,
             'classroom_id' => $student->classroom_id,

@@ -8,6 +8,7 @@ use App\Models\IncidentFollowup;
 use App\Models\IncidentTask;
 use App\Models\School;
 use App\Models\User;
+use Illuminate\Database\UniqueConstraintViolationException;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 
@@ -28,29 +29,39 @@ class IncidentService
             $confidentiality = $category->default_confidentiality;
             $severity = (int) $data['severity'];
             $occurredAt = Carbon::parse($data['occurred_at']);
-            $caseNumber = $this->nextCaseNumber($occurredAt->year);
-
             $assignee = $this->resolveAssignee($school, $reporter, $severity, $confidentiality);
             $dueHours = config('sigap.response_due_hours.'.$severity, 48);
             $isUrgent = $severity >= 3 || $confidentiality === 'sangat_rahasia';
 
-            $incident = Incident::create([
-                'school_id' => $school->id,
-                'case_number' => $caseNumber,
-                'category_id' => $category->id,
-                'severity' => $severity,
-                'occurred_at' => $occurredAt,
-                'incident_location_id' => $data['incident_location_id'] ?? null,
-                'location' => $data['location'],
-                'description' => $data['description'],
-                'initial_action' => $data['initial_action'] ?? null,
-                'needs_medical' => (bool) ($data['needs_medical'] ?? false),
-                'status' => 'baru',
-                'confidentiality' => $confidentiality,
-                'reported_by' => $reporter->id,
-                'assigned_to' => $assignee?->id,
-                'due_at' => now()->addHours($dueHours),
-            ]);
+            $incident = null;
+            for ($attempt = 1; $attempt <= 5; $attempt++) {
+                try {
+                    $caseNumber = $this->nextCaseNumber($occurredAt->year);
+                    $incident = Incident::create([
+                        'school_id' => $school->id,
+                        'case_number' => $caseNumber,
+                        'category_id' => $category->id,
+                        'severity' => $severity,
+                        'occurred_at' => $occurredAt,
+                        'incident_location_id' => $data['incident_location_id'] ?? null,
+                        'location' => $data['location'],
+                        'description' => $data['description'],
+                        'initial_action' => $data['initial_action'] ?? null,
+                        'needs_medical' => (bool) ($data['needs_medical'] ?? false),
+                        'status' => 'baru',
+                        'confidentiality' => $confidentiality,
+                        'reported_by' => $reporter->id,
+                        'assigned_to' => $assignee?->id,
+                        'due_at' => now()->addHours($dueHours),
+                    ]);
+                    break;
+                } catch (UniqueConstraintViolationException $e) {
+                    if ($attempt === 5) {
+                        throw $e;
+                    }
+                    usleep(20000);
+                }
+            }
 
             foreach ($data['participants'] as $participant) {
                 $incident->participants()->create([

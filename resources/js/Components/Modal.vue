@@ -38,18 +38,18 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKeydown));
             leave-from-class="opacity-100"
             leave-to-class="opacity-0"
         >
-            <div v-if="show" class="fixed inset-0 z-50 flex items-end justify-center p-0 sm:items-center sm:p-4">
+            <div v-if="show" class="fixed inset-0 z-[80] flex items-end justify-center p-0 sm:items-center sm:p-4">
                 <div class="absolute inset-0 bg-slate-900/50 backdrop-blur-sm" @click="emit('close')"></div>
                 <div
                     class="relative max-h-[92vh] w-full overflow-y-auto rounded-t-3xl bg-white p-5 shadow-2xl sm:rounded-2xl sm:p-6"
                     :class="widthClass"
                 >
                     <div class="mb-4 flex items-start justify-between gap-4">
-                        <div>
-                            <h3 class="text-lg font-bold tracking-tight text-slate-900">{{ title }}</h3>
+                        <div class="min-w-0 flex-1">
+                            <h3 class="truncate text-lg font-bold tracking-tight text-slate-900">{{ title }}</h3>
                             <p v-if="description" class="mt-1 text-sm text-slate-500">{{ description }}</p>
                         </div>
-                        <button type="button" class="rounded-lg p-1.5 text-slate-400 transition hover:bg-slate-100 hover:text-slate-700" @click="emit('close')">
+                        <button type="button" class="shrink-0 rounded-lg p-1.5 text-slate-400 transition hover:bg-slate-100 hover:text-slate-700" aria-label="Tutup dialog" @click="emit('close')">
                             <X class="h-5 w-5" />
                         </button>
                     </div>

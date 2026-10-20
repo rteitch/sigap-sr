@@ -259,7 +259,7 @@ function toggleLocation(item) {
 }
 
 function formatDate(value) {
-    if (!value) return 'â€”';
+    if (!value) return '—';
     return new Intl.DateTimeFormat('id-ID', { day: 'numeric', month: 'short', year: 'numeric' }).format(new Date(`${value}T00:00:00`));
 }
 </script>
@@ -331,7 +331,7 @@ function formatDate(value) {
                     <tbody class="divide-y divide-slate-100">
                         <tr v-for="item in academicYears" :key="item.id" class="hover:bg-slate-50/70">
                             <td class="px-4 py-3 font-semibold text-slate-800">{{ item.name }}</td>
-                            <td class="whitespace-nowrap px-4 py-3 text-slate-500">{{ formatDate(item.start_date) }} â€“ {{ formatDate(item.end_date) }}</td>
+                            <td class="whitespace-nowrap px-4 py-3 text-slate-500">{{ formatDate(item.start_date) }} – {{ formatDate(item.end_date) }}</td>
                             <td class="px-4 py-3 text-slate-600">{{ item.classrooms_count }}</td>
                             <td class="whitespace-nowrap px-4 py-3">
                                 <span class="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-bold ring-1" :class="item.is_active ? 'bg-emerald-50 text-emerald-700 ring-emerald-200' : 'bg-slate-100 text-slate-500 ring-slate-200'">
@@ -401,9 +401,9 @@ function formatDate(value) {
                     <tbody class="divide-y divide-slate-100">
                         <tr v-for="item in classrooms" :key="item.id" class="hover:bg-slate-50/70">
                             <td class="px-4 py-3 font-semibold text-slate-800">{{ item.name }}</td>
-                            <td class="px-4 py-3 text-slate-600">{{ item.level_name ?? item.level ?? 'â€”' }}</td>
-                            <td class="px-4 py-3 text-slate-600">{{ item.academic_year_name ?? item.academic_year ?? 'â€”' }}</td>
-                            <td class="px-4 py-3 text-slate-600">{{ item.homeroom_teacher ?? 'â€”' }}</td>
+                            <td class="px-4 py-3 text-slate-600">{{ item.level_name ?? item.level ?? '—' }}</td>
+                            <td class="px-4 py-3 text-slate-600">{{ item.academic_year_name ?? item.academic_year ?? '—' }}</td>
+                            <td class="px-4 py-3 text-slate-600">{{ item.homeroom_teacher ?? '—' }}</td>
                             <td class="px-4 py-3 text-slate-600">{{ item.students_count }}</td>
                             <td class="whitespace-nowrap px-4 py-3">
                                 <button type="button" class="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-bold ring-1" :class="item.is_active ? 'bg-emerald-50 text-emerald-700 ring-emerald-200' : 'bg-slate-100 text-slate-500 ring-slate-200'" @click="toggleClassroom(item)">
@@ -439,7 +439,7 @@ function formatDate(value) {
                             <td class="px-4 py-3 font-semibold text-slate-800">{{ item.name }}</td>
                             <td class="px-4 py-3 text-slate-600">{{ options.genders[item.gender] ?? item.gender }}</td>
                             <td class="px-4 py-3 text-slate-600">{{ item.students_count }} / {{ item.capacity }}</td>
-                            <td class="px-4 py-3 text-slate-600">{{ item.wali ?? 'â€”' }}</td>
+                            <td class="px-4 py-3 text-slate-600">{{ item.wali ?? '—' }}</td>
                             <td class="px-4 py-3 text-slate-600">{{ item.students_count }}</td>
                             <td class="whitespace-nowrap px-4 py-3">
                                 <button type="button" class="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-bold ring-1" :class="item.is_active ? 'bg-emerald-50 text-emerald-700 ring-emerald-200' : 'bg-slate-100 text-slate-500 ring-slate-200'" @click="toggleDorm(item)">
@@ -575,7 +575,7 @@ function formatDate(value) {
                         <label class="label" for="classroom-teacher">Wali kelas</label>
                         <select id="classroom-teacher" v-model="classroomForm.homeroom_teacher_id" class="field">
                             <option value="">Belum ditentukan</option>
-                            <option v-for="teacher in teachers" :key="teacher.id" :value="teacher.id">{{ teacher.name }} Â· {{ teacher.role_label }}</option>
+                            <option v-for="teacher in teachers" :key="teacher.id" :value="teacher.id">{{ teacher.name }} · {{ teacher.role_label }}</option>
                         </select>
                         <p v-if="classroomForm.errors.homeroom_teacher_id" class="mt-1 text-xs font-medium text-rose-600">{{ classroomForm.errors.homeroom_teacher_id }}</p>
                     </div>
@@ -608,7 +608,7 @@ function formatDate(value) {
                         <label class="label" for="dorm-wali">Wali asrama</label>
                         <select id="dorm-wali" v-model="dormForm.wali_id" class="field">
                             <option value="">Belum ditentukan</option>
-                            <option v-for="teacher in teachers" :key="teacher.id" :value="teacher.id">{{ teacher.name }} Â· {{ teacher.role_label }}</option>
+                            <option v-for="teacher in teachers" :key="teacher.id" :value="teacher.id">{{ teacher.name }} · {{ teacher.role_label }}</option>
                         </select>
                         <p v-if="dormForm.errors.wali_id" class="mt-1 text-xs font-medium text-rose-600">{{ dormForm.errors.wali_id }}</p>
                     </div>

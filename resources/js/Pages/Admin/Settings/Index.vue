@@ -151,17 +151,16 @@ onBeforeUnmount(() => {
                             <p v-if="form.errors.level" class="mt-1.5 text-xs font-medium text-rose-600">{{ form.errors.level }}</p>
                         </div>
                         <div class="sm:col-span-2">
-                            <label class="label" for="address">Alamat</label>
-                            <div class="relative">
-                                <MapPin class="pointer-events-none absolute left-3 top-3 h-4 w-4 text-slate-400" />
-                                <textarea id="address" v-model="form.address" rows="2" class="field !pl-9"></textarea>
-                            </div>
+                            <label class="label flex items-center gap-1.5" for="address">
+                                <MapPin class="h-3.5 w-3.5 text-slate-400" /> Alamat
+                            </label>
+                            <textarea id="address" v-model="form.address" rows="2" class="field" placeholder="Alamat lengkap sekolah"></textarea>
                         </div>
                         <div>
                             <label class="label" for="phone">Telepon</label>
                             <div class="relative">
-                                <Phone class="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
-                                <input id="phone" v-model="form.phone" type="tel" class="field !pl-9" />
+                                <Phone class="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+                                <input id="phone" v-model="form.phone" type="tel" class="field pl-10" />
                             </div>
                         </div>
                         <div class="flex items-end">
@@ -279,7 +278,7 @@ onBeforeUnmount(() => {
                                 <img v-if="currentLogo" :src="currentLogo" alt="Logo" class="h-full w-full object-contain p-1" />
                                 <School v-else class="h-4 w-4" />
                             </span>
-                            <div class="min-w-0">
+                            <div class="min-w-0 flex-1">
                                 <p class="truncate text-sm font-bold">{{ form.app_name || 'SIGAP-SR' }}</p>
                                 <p class="truncate text-[10px] text-white/80">{{ form.tagline || 'Pengasuhan, pembinaan, dan evaluasi' }}</p>
                             </div>
@@ -330,6 +329,11 @@ onBeforeUnmount(() => {
                         <div class="flex justify-between gap-2"><dt>Lisensi</dt><dd class="font-semibold">{{ license }}</dd></div>
                         <div class="flex justify-between gap-2"><dt>Pengembang</dt><dd class="text-right font-semibold">{{ developer.name || 'Rizal Taufiq Hidayat' }}</dd></div>
                     </dl>
+                    <div class="mt-3 flex flex-wrap items-center gap-2 border-t border-brand-200/50 pt-2 text-[10px] text-brand-900/80">
+                        <Link href="/kebijakan-privasi" class="font-semibold underline hover:text-brand-950">Kebijakan Privasi</Link>
+                        <span>·</span>
+                        <Link href="/persyaratan-layanan" class="font-semibold underline hover:text-brand-950">Persyaratan Layanan</Link>
+                    </div>
                 </div>
             </div>
         </form>

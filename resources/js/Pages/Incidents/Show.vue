@@ -99,6 +99,18 @@ function toggleTask(task) {
     router.patch(`/insiden/${props.incident.id}/tugas/${task.id}`, {}, { preserveScroll: true });
 }
 
+const newTaskForm = useForm({
+    label: '',
+});
+
+function submitNewTask() {
+    if (!newTaskForm.label.trim()) return;
+    newTaskForm.post(`/insiden/${props.incident.id}/tugas`, {
+        preserveScroll: true,
+        onSuccess: () => newTaskForm.reset(),
+    });
+}
+
 function openFollowup(followup) {
     activeFollowup.value = followup;
     followupForm.reset();
@@ -268,6 +280,22 @@ const followupStatusLabel = { pending: 'Menunggu', done: 'Selesai' };
                             </span>
                         </button>
                     </div>
+                    <form v-if="canManage" class="mt-3 flex gap-2" @submit.prevent="submitNewTask">
+                        <input
+                            v-model="newTaskForm.label"
+                            type="text"
+                            class="field !py-1.5 text-xs"
+                            placeholder="Tambah butir tindakan atau protokol khusus..."
+                            required
+                        />
+                        <button
+                            type="submit"
+                            class="btn-secondary shrink-0 !px-3 !py-1.5 text-xs font-semibold"
+                            :disabled="newTaskForm.processing || !newTaskForm.label.trim()"
+                        >
+                            <Plus class="h-3.5 w-3.5" /> Tambah tindakan
+                        </button>
+                    </form>
                     <p v-if="!canManage" class="mt-2 text-[10px] text-slate-400">Hanya penanggung jawab atau staf berwenang yang dapat mengubah langkah protokol.</p>
                 </section>
 

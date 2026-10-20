@@ -4,6 +4,7 @@ import { Head, Link, useForm, usePage } from '@inertiajs/vue3';
 import {
     AlertTriangle,
     CalendarDays,
+    Camera,
     Contact,
     HeartHandshake,
     MapPin,
@@ -11,6 +12,7 @@ import {
     Save,
     ShieldCheck,
     Trash2,
+    Upload,
     UserRound,
 } from '@lucide/vue';
 import AppLayout from '../../Layouts/AppLayout.vue';
@@ -49,6 +51,8 @@ const form = useForm({
     consent_scope: props.student?.consent_scope ?? 'Pemrosesan data pengasuhan, presensi, dan evaluasi.',
     consent_document: props.student?.consent_document ?? '',
     consent_withdrawn_at: props.student?.consent_withdrawn_at ?? '',
+    photo: null,
+    remove_photo: false,
     contacts: props.student?.contacts?.length
         ? props.student.contacts.map((contact, index) => ({
               name: contact.name ?? '',
@@ -60,7 +64,54 @@ const form = useForm({
         : [{ name: '', relation: 'Ibu', phone: '', is_primary: true, can_pickup: true }],
 });
 
+const fileInput = ref(null);
+const previewUrl = ref(props.student?.photo_url || null);
+
+function onPhotoSelected(e) {
+    const file = e.target.files?.[0];
+    if (file) {
+        form.photo = file;
+        form.remove_photo = false;
+        previewUrl.value = URL.createObjectURL(file);
+    }
+}
+
+function removePhoto() {
+    form.photo = null;
+    form.remove_photo = true;
+    previewUrl.value = null;
+    if (fileInput.value) {
+        fileInput.value.value = '';
+    }
+}
+
+const computedAge = computed(() => {
+    if (!form.birth_date) return null;
+    const birth = new Date(form.birth_date);
+    if (isNaN(birth.getTime())) return null;
+    const today = new Date();
+    let age = today.getFullYear() - birth.getFullYear();
+    const m = today.getMonth() - birth.getMonth();
+    if (m < 0 || (m === 0 && today.getDate() < birth.getDate())) {
+        age--;
+    }
+    return age >= 0 ? age : null;
+});
+
 const showSensitive = ref(Boolean(form.special_needs || form.socioeconomic_desil));
+
+const filteredDorms = computed(() => {
+    if (!form.gender) return props.dorms;
+    return props.dorms.filter((dorm) => dorm.gender === form.gender);
+});
+
+const selectedClassroom = computed(() =>
+    props.classrooms.find((c) => c.id === form.classroom_id)
+);
+
+const selectedDorm = computed(() =>
+    props.dorms.find((d) => d.id === form.dorm_id)
+);
 
 function addContact() {
     form.contacts.push({ name: '', relation: '', phone: '', is_primary: form.contacts.length === 0, can_pickup: false });
@@ -82,7 +133,10 @@ function setPrimary(index) {
 
 function submit() {
     if (isEdit.value) {
-        form.put(`/siswa/${props.student.id}`);
+        form.transform((data) => ({
+            ...data,
+            _method: 'put',
+        })).post(`/siswa/${props.student.id}`);
     } else {
         form.post('/siswa');
     }
@@ -116,6 +170,32 @@ function submit() {
                             <p class="text-[11px] text-slate-500">Nama dan identitas hanya untuk keperluan pengasuhan.</p>
                         </div>
                     </div>
+
+                    <!-- Foto Avatar Upload Card -->
+                    <div class="mb-5 flex flex-col gap-4 rounded-xl border border-slate-200 bg-slate-50/70 p-4 sm:flex-row sm:items-center">
+                        <div class="relative h-20 w-20 shrink-0 overflow-hidden rounded-2xl border-2 border-white bg-slate-200 shadow-sm ring-1 ring-slate-200">
+                            <img v-if="previewUrl" :src="previewUrl" alt="Foto identitas siswa" class="h-full w-full object-cover" />
+                            <div v-else class="flex h-full w-full flex-col items-center justify-center text-slate-400">
+                                <Camera class="h-6 w-6" />
+                                <span class="mt-1 text-[9px] font-semibold uppercase">Foto</span>
+                            </div>
+                        </div>
+                        <div class="min-w-0 flex-1">
+                            <p class="text-xs font-bold text-slate-800">Foto Identitas &amp; Avatar Siswa</p>
+                            <p class="mt-0.5 text-[11px] text-slate-500">Membantu pengasuh asrama dan guru mengenali santri secara akurat. Format JPG, PNG, atau WebP maks 2MB.</p>
+                            <div class="mt-2.5 flex flex-wrap items-center gap-2">
+                                <input id="photo-upload" ref="fileInput" type="file" accept="image/jpeg,image/png,image/webp" class="sr-only" @change="onPhotoSelected" />
+                                <label for="photo-upload" class="btn-secondary !px-3 !py-1.5 !text-xs cursor-pointer">
+                                    <Upload class="h-3.5 w-3.5" /> {{ previewUrl ? 'Ganti foto' : 'Pilih foto' }}
+                                </label>
+                                <button v-if="previewUrl" type="button" class="btn-ghost !px-3 !py-1.5 !text-xs text-rose-600 hover:bg-rose-50 hover:text-rose-700" @click="removePhoto">
+                                    <Trash2 class="h-3.5 w-3.5" /> Hapus
+                                </button>
+                            </div>
+                            <p v-if="form.errors.photo" class="mt-1.5 text-xs font-medium text-rose-600">{{ form.errors.photo }}</p>
+                        </div>
+                    </div>
+
                     <div class="grid gap-4 sm:grid-cols-2">
                         <div>
                             <label class="label" for="full_name">Nama lengkap</label>
@@ -139,12 +219,19 @@ function submit() {
                             </select>
                         </div>
                         <div>
-                            <label class="label" for="birth_date">Tanggal lahir</label>
+                            <div class="flex items-center justify-between">
+                                <label class="label" for="birth_date">Tanggal lahir</label>
+                                <span v-if="computedAge !== null" class="mb-1 rounded-full bg-brand-50 px-2 py-0.5 text-[10px] font-semibold text-brand-700">
+                                    {{ computedAge }} tahun
+                                </span>
+                            </div>
                             <input id="birth_date" v-model="form.birth_date" type="date" class="field" />
+                            <p v-if="form.errors.birth_date" class="mt-1.5 text-xs font-medium text-rose-600">{{ form.errors.birth_date }}</p>
                         </div>
                         <div>
                             <label class="label" for="birth_place">Tempat lahir</label>
                             <input id="birth_place" v-model="form.birth_place" type="text" class="field" placeholder="Kota/kabupaten" />
+                            <p v-if="form.errors.birth_place" class="mt-1.5 text-xs font-medium text-rose-600">{{ form.errors.birth_place }}</p>
                         </div>
                         <div class="sm:col-span-2">
                             <label class="label" for="address">Alamat asal</label>
@@ -166,15 +253,35 @@ function submit() {
                             <label class="label" for="classroom_id">Kelas</label>
                             <select id="classroom_id" v-model="form.classroom_id" class="field">
                                 <option value="">Belum ditempatkan</option>
-                                <option v-for="classroom in classrooms" :key="classroom.id" :value="classroom.id">{{ classroom.name }} ({{ classroom.level }})</option>
+                                <option v-for="classroom in classrooms" :key="classroom.id" :value="classroom.id">
+                                    {{ classroom.name }} ({{ classroom.level }}){{ classroom.homeroom_teacher ? ' — Wali: ' + classroom.homeroom_teacher : '' }}
+                                </option>
                             </select>
+                            <p v-if="selectedClassroom?.homeroom_teacher" class="mt-1 text-[11px] text-brand-700">
+                                Wali kelas: <span class="font-semibold">{{ selectedClassroom.homeroom_teacher }}</span>
+                            </p>
                         </div>
                         <div>
                             <label class="label" for="dorm_id">Asrama</label>
                             <select id="dorm_id" v-model="form.dorm_id" class="field">
                                 <option value="">Tanpa asrama</option>
-                                <option v-for="dorm in dorms" :key="dorm.id" :value="dorm.id">{{ dorm.name }} ({{ options.genders[dorm.gender] }})</option>
+                                <optgroup v-if="filteredDorms.length" :label="'Asrama ' + (options.genders[form.gender] || 'Siswa')">
+                                    <option v-for="dorm in filteredDorms" :key="dorm.id" :value="dorm.id">
+                                        {{ dorm.name }}{{ dorm.wali_name ? ' — Pembina: ' + dorm.wali_name : '' }}
+                                    </option>
+                                </optgroup>
+                                <optgroup v-if="dorms.length > filteredDorms.length" label="Asrama Lainnya">
+                                    <option v-for="dorm in dorms.filter(d => d.gender !== form.gender)" :key="dorm.id" :value="dorm.id">
+                                        {{ dorm.name }} ({{ options.genders[dorm.gender] }})
+                                    </option>
+                                </optgroup>
                             </select>
+                            <p v-if="selectedDorm?.wali_name" class="mt-1 text-[11px] text-brand-700">
+                                Pembina asrama: <span class="font-semibold">{{ selectedDorm.wali_name }}</span>
+                            </p>
+                            <p v-else-if="form.gender" class="mt-1 text-[11px] text-slate-400">
+                                Menampilkan asrama khusus {{ options.genders[form.gender] }}.
+                            </p>
                         </div>
                         <div>
                             <label class="label" for="entry_date">Tanggal masuk</label>
@@ -224,7 +331,7 @@ function submit() {
                         <div v-for="(contact, index) in form.contacts" :key="index" class="rounded-xl border border-slate-200 p-3.5">
                             <div class="flex items-center justify-between gap-2">
                                 <p class="text-[11px] font-bold uppercase tracking-wide text-slate-400">Kontak {{ index + 1 }}</p>
-                                <button v-if="form.contacts.length > 1" type="button" class="rounded-lg p-1.5 text-slate-400 hover:bg-rose-50 hover:text-rose-600" @click="removeContact(index)">
+                                <button v-if="form.contacts.length > 1" type="button" class="rounded-lg p-1.5 text-slate-400 hover:bg-rose-50 hover:text-rose-600" title="Hapus kontak" aria-label="Hapus kontak" @click="removeContact(index)">
                                     <Trash2 class="h-4 w-4" />
                                 </button>
                             </div>

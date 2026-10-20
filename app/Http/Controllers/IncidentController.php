@@ -358,6 +358,29 @@ class IncidentController extends Controller
         return back();
     }
 
+    public function storeTask(Request $request, Incident $incident): RedirectResponse
+    {
+        $user = $request->user();
+        abort_unless($incident->school_id === $user->school_id, 404);
+        abort_unless($user->canManageIncidents() || $incident->assigned_to === $user->id, 403);
+
+        $validated = $request->validate([
+            'label' => ['required', 'string', 'min:3', 'max:255'],
+        ]);
+
+        $maxOrder = $incident->tasks()->max('sort_order') ?? 0;
+
+        $incident->tasks()->create([
+            'label' => $validated['label'],
+            'is_done' => false,
+            'sort_order' => $maxOrder + 1,
+        ]);
+
+        AuditLogger::record('incident.task_created', $incident, 'Menambahkan langkah tindakan mandiri pada kasus: '.$validated['label']);
+
+        return back()->with('success', 'Tindakan baru berhasil ditambahkan.');
+    }
+
     public function completeFollowup(Request $request, Incident $incident, int $followup): RedirectResponse
     {
         $user = $request->user();

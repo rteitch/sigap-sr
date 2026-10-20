@@ -103,6 +103,16 @@ class Student extends Model
         return $this->identity?->full_name ?? $this->code;
     }
 
+    public function getPhotoUrlAttribute(): ?string
+    {
+        return $this->identity?->photo_url;
+    }
+
+    public function getAgeAttribute(): ?int
+    {
+        return $this->birth_date ? $this->birth_date->age : null;
+    }
+
     public function hasActiveConsent(): bool
     {
         return $this->consent_given_at !== null && $this->consent_withdrawn_at === null;

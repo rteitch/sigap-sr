@@ -1,8 +1,50 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="SIGAP-SR">
-  <rect width="512" height="512" rx="96" fill="#0f766e"/>
-  <circle cx="400" cy="432" r="230" fill="#ffffff" opacity="0.08"/>
-  <circle cx="96" cy="72" r="130" fill="#ffffff" opacity="0.06"/>
-  <path d="M256 96l112 46v104c0 82-48 145-112 170-64-25-112-88-112-170V142l112-46z" fill="#ffffff" opacity="0.12"/>
-  <text x="256" y="268" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="176" font-weight="700" fill="#ffffff">SR</text>
-  <text x="256" y="354" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="42" font-weight="700" letter-spacing="8" fill="#ffffff" opacity="0.85">SIGAP</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%" role="img" aria-label="SIGAP-SR - Sistem Informasi Pengasuhan dan Pembinaan Sekolah Rakyat">
+  <defs>
+    <linearGradient id="sigapTealGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#14b8a6"/>
+      <stop offset="35%" stop-color="#0f766e"/>
+      <stop offset="100%" stop-color="#115e59"/>
+    </linearGradient>
+    <linearGradient id="sigapGoldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fef08a"/>
+      <stop offset="40%" stop-color="#f59e0b"/>
+      <stop offset="100%" stop-color="#d97706"/>
+    </linearGradient>
+    <linearGradient id="sigapLeafGrad" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#059669"/>
+      <stop offset="60%" stop-color="#10b981"/>
+      <stop offset="100%" stop-color="#34d399"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background Canvas -->
+  <rect width="512" height="512" rx="118" fill="url(#sigapTealGrad)"/>
+
+  <!-- Warm ambient circles -->
+  <circle cx="256" cy="190" r="140" fill="#ffffff" opacity="0.07"/>
+  <circle cx="256" cy="270" r="100" fill="#f59e0b" opacity="0.10"/>
+
+  <!-- Embracing hands/wings of protection (Left and Right) -->
+  <path d="M124 232 C120 316 174 388 256 424 C216 400 166 352 164 278 C164 246 174 220 188 200 C156 204 126 216 124 232 Z"
+        fill="#ffffff" opacity="0.95"/>
+  <path d="M388 232 C392 316 338 388 256 424 C296 400 346 352 348 278 C348 246 338 220 324 200 C356 204 386 216 388 232 Z"
+        fill="#ffffff" opacity="0.95"/>
+
+  <!-- Foundation Open Book of Education (Left page, Right page, and Spine) -->
+  <path d="M256 376 C214 358 166 360 134 374 C140 318 178 296 256 312 Z"
+        fill="#ffffff"/>
+  <path d="M256 376 C298 358 346 360 378 374 C372 318 334 296 256 312 Z"
+        fill="#ffffff"/>
+  <path d="M256 312 L256 384" stroke="#0f766e" stroke-width="6" stroke-linecap="round"/>
+
+  <!-- Growing Sprout of Potential / Pembinaan Tunas Kasih -->
+  <path d="M256 296 C218 280 196 238 206 188 C232 192 250 216 256 252 Z"
+        fill="url(#sigapLeafGrad)"/>
+  <path d="M256 296 C294 280 316 238 306 188 C280 192 262 216 256 252 Z"
+        fill="#34d399"/>
+
+  <!-- Central Warm Golden Heart of Care / Pengasuhan -->
+  <path d="M256 236 C245 220 224 202 224 184 C224 168 236 156 248 156 C253 156 255 158 256 161 C257 158 259 156 264 156 C276 156 288 168 288 184 C288 202 267 220 256 236 Z"
+        fill="url(#sigapGoldGrad)"/>
+  <circle cx="249" cy="172" r="4.5" fill="#ffffff" opacity="0.9"/>
 </svg>
