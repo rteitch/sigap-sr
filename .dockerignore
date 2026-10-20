@@ -3,14 +3,17 @@
 .github
 .gitignore
 .gitattributes
+docs
+docs/screenshots
 
 # Environment & Credentials
 .env
+.env.*
 .env.backup
 .env.production
 auth.json
 
-# Local Build & Dependencies (will be freshly built in container stages)
+# Local Build & Dependencies (freshly built inside container stages)
 node_modules
 vendor
 public/build
@@ -25,8 +28,12 @@ storage/app/screenshots
 .phpunit.cache
 tests
 
-# Runtime Storage & Logs
+# Runtime Storage, Logs & Database
 storage/logs/*.log
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
 storage/framework/cache/data/*
 storage/framework/sessions/*
 storage/framework/views/*
@@ -34,11 +41,15 @@ storage/app/public/*
 database/*.sqlite*
 bootstrap/cache/*.php
 
-# IDEs & OS files
+# IDEs & Developer Meta
 .idea
 .vscode
 .zed
 .codex
 .cursor
+.fleet
+.phpactor.json
+_ide_helper*
+.phpstorm.meta.php
 .DS_Store
 Thumbs.db

@@ -10,6 +10,7 @@ Aplikasi web ramah anak dan berstandar produksi untuk membantu sekolah berasrama
 
 [![PHP 8.3](https://img.shields.io/badge/PHP-8.3-777BB4?style=flat&logo=php&logoColor=white)](https://www.php.net)
 [![Laravel 13](https://img.shields.io/badge/Laravel-13-FF2D20?style=flat&logo=laravel&logoColor=white)](https://laravel.com)
+[![FrankenPHP Ready](https://img.shields.io/badge/FrankenPHP-HTTP%2F3%20Ready-00ADD8?style=flat&logo=caddy&logoColor=white)](https://frankenphp.dev)
 [![Vue 3](https://img.shields.io/badge/Vue-3-4FC08D?style=flat&logo=vuedotjs&logoColor=white)](https://vuejs.org)
 [![Inertia.js v3](https://img.shields.io/badge/Inertia.js-v3-9553E9?style=flat&logo=inertia&logoColor=white)](https://inertiajs.com)
 [![Tailwind CSS 4](https://img.shields.io/badge/Tailwind_CSS-v4-06B6D4?style=flat&logo=tailwindcss&logoColor=white)](https://tailwindcss.com)
@@ -24,212 +25,141 @@ Dikembangkan dan dipelihara oleh **Rizal Taufiq Hidayat** · [GitHub](https://gi
 
 ---
 
-## Filosofi Logo & Identitas Ramah ("Caring & Growth")
+## 📸 Galeri Antarmuka Aplikasi (Live Showcase)
 
-Logo **SIGAP-SR** dirancang dengan filosofi kehangatan, pengasuhan, dan perlindungan holistik:
+Berikut adalah tangkapan layar tampilan antarmuka SIGAP-SR pada berbagai menu operasional:
+
+### 🌟 Tampilan Utama (Hero Showcase)
+
+| 📊 Dashboard Terpadu & Statistik Perlindungan | 🎓 Direktori Siswa & Avatar Identitas Santri |
+| :---: | :---: |
+| <img src="docs/screenshots/02-dashboard.png" width="100%" alt="Dashboard SIGAP-SR" /> | <img src="docs/screenshots/04-direktori-siswa.png" width="100%" alt="Direktori Siswa & Avatar" /> |
+
+<details open>
+<summary><b>📂 Klik untuk melihat galeri lengkap seluruh modul aplikasi...</b></summary>
+<br>
+
+#### 1. Manajemen Santri & Presensi Harian
+
+| Formulir Santri, Usia Otomatis & Foto | Presensi Santri & Deteksi Siswa Tidak Ditemukan |
+| :---: | :---: |
+| <img src="docs/screenshots/05-form-siswa-foto.png" width="100%" alt="Formulir Santri & Unggah Foto" /> | <img src="docs/screenshots/06-presensi-santri.png" width="100%" alt="Presensi Harian Santri" /> |
+| *Unggah foto terintegrasi avatar, hitung usia dinamis, dan pemilihan kelas.* | *Pencatatan sesi apel, makan, kelas dengan deteksi santri hilang otomatis.* |
+
+#### 2. Perlindungan Anak & Kehidupan Asrama
+
+| Manajemen Kasus & Riwayat Insiden | Pelaporan Insiden & Protokol Tindak Lanjut |
+| :---: | :---: |
+| <img src="docs/screenshots/07-daftar-insiden.png" width="100%" alt="Daftar Insiden Perlindungan Anak" /> | <img src="docs/screenshots/08-lapor-insiden.png" width="100%" alt="Formulir Pelaporan Kasus" /> |
+| *Filter tingkat keparahan, jalur rahasia TPPK, dan status investigasi.* | *Pelaporan berbasis fakta teramati, checklist protokol, dan penugasan tim.* |
+
+| Pembinaan Asrama, Ronde Malam & Logbook | Laporan Statistik Bulanan & Ekspor XLSX |
+| :---: | :---: |
+| <img src="docs/screenshots/09-pembinaan-asrama.png" width="100%" alt="Pembinaan Asrama" /> | <img src="docs/screenshots/10-laporan-bulanan.png" width="100%" alt="Laporan Bulanan" /> |
+| *Checklist ronda malam, log pergantian shift pembina, dan catatan kejadian.* | *Agregasi tren santri, perlindungan kelompok kecil, dan ekspor data audit.* |
+
+#### 3. Manajemen Tenaga Pendidik & Administrasi
+
+| Direktori Guru, Wali Kelas & Wali Asrama | Kustomisasi Identitas & Branding Sekolah |
+| :---: | :---: |
+| <img src="docs/screenshots/11-guru-dan-staf.png" width="100%" alt="Manajemen Guru & Staf" /> | <img src="docs/screenshots/12-branding-sekolah.png" width="100%" alt="Branding Sekolah" /> |
+| *Manajemen peran, penugasan kelas perwalian, dan asrama asuh binaan.* | *Kustomisasi nama sekolah, tagline, warna tema, dan logo aplikasi dinamis.* |
+
+#### 4. Keamanan Akun & Kepatuhan Regulasi
+
+| Halaman Autentikasi & Akun Uji Coba | Pengaturan Profil & Keamanan Mandiri |
+| :---: | :---: |
+| <img src="docs/screenshots/01-login.png" width="100%" alt="Halaman Login" /> | <img src="docs/screenshots/03-profil.png" width="100%" alt="Pengaturan Profil" /> |
+| *Desain ramah anak, layout teroptimasi tanpa overlap, dan switcher demo.* | *Pembaruan kontak WhatsApp, ganti kata sandi, dan rekam jejak audit.* |
+
+| Kebijakan Privasi (Kepatuhan UU PDP No. 27/2022) | Persyaratan Layanan Satuan Pendidikan Berasrama |
+| :---: | :---: |
+| <img src="docs/screenshots/13-kebijakan-privasi.png" width="100%" alt="Kebijakan Privasi" /> | <img src="docs/screenshots/14-persyaratan-layanan.png" width="100%" alt="Persyaratan Layanan" /> |
+| *Standar perlindungan data pribadi anak, hak orang tua, dan pseudonimisasi.* | *Kode etik staf, larangan sebar tangkapan layar kasus, dan integritas presensi.* |
+
+</details>
+
+---
+
+## 🎨 Filosofi Logo & Identitas Ramah ("Caring & Growth")
+
+Logo **SIGAP-SR** dirancang dengan filosofi kehangatan, pengasuhan, dan perlindungan holistik bagi anak-anak di sekolah berasrama:
 - **Rangkulan Asuh (Embracing Care)**: Sayap rangkulan lembut yang melingkari anak, menghadirkan rasa aman dari perundungan, kekerasan, maupun penelantaran.
 - **Buku Masa Depan (Book of Growth)**: Fondasi terbuka yang melambangkan pendidikan karakter, ilmu pengetahuan, dan bimbingan guru pamong.
 - **Tunas Bertumbuh (Sprout of Hope)**: Tunas daun hijau emerald yang tumbuh di tengah buku, mencerminkan potensi setiap anak yang mekar optimal.
 - **Inti Hati Emas (Golden Heart of Care)**: Pusat hangat berwarna emas yang memancarkan ketulusan, kasih sayang, dan pendampingan tanpa stigma.
 
-Logo berbentuk vektor SVG murni (`public/icon.svg`), didukung binary `public/favicon.ico` multi-resolusi riil (16×16, 32×32, 48×48 px) dan aset PWA adaptif (`icon-192.png` & `icon-512.png`).
+Logo hadir dalam format vektor SVG murni (`public/icon.svg`), didukung binary `public/favicon.ico` multi-resolusi riil (16×16, 32×32, 48×48 px) dan aset PWA adaptif (`icon-192.png` & `icon-512.png`).
 
 ---
 
-## Ringkasan Fitur Unggulan
+## 🚀 Ringkasan Fitur Unggulan
 
-SIGAP-SR dirancang khusus untuk operasional harian sekolah berasrama dengan standar keamanan data anak:
-
-- **Identitas Siswa, Foto & Avatar Terintegrasi**:
-  - Kolom `photo_path` pada tabel `student_identities` (prinsip *Privacy by Design* — identitas langsung anak dipisahkan dari tabel operasional).
-  - Unggah foto dengan validasi format (JPG, PNG, WebP maks 2MB), kompresi, dan pratinjau langsung.
-  - Avatar dinamis tampil di tabel direktori siswa, form pendaftaran, profil detail santri, dan baris presensi harian.
-  - Tanggal lahir terintegrasi dengan kalkulasi usia santri otomatis (misal: `14 tahun`).
+- **Identitas Santri, Usia & Avatar Dinamis**:
+  - Kolom `photo_path` pada tabel `student_identities` (prinsip *Privacy by Design* — identitas langsung anak dipisahkan dari tabel analitik operasional).
+  - Unggah foto dengan kompresi otomatis dan pratinjau langsung.
+  - Avatar dinamis tampil di tabel direktori siswa, form santri, profil detail, dan presensi harian.
+  - Kalkulasi usia santri otomatis dari tanggal lahir (misal: `14 tahun`).
 - **Manajemen Guru & Tenaga Kependidikan (`/admin/users`)**:
-  - Navigasi khusus **Guru & Staf** dengan tab filter cepat (*Semua Staf*, *Guru & Wali Kelas*, *Wali Asrama*, *Manajemen & TPPK*).
+  - Filter cepat peran (*Semua Staf*, *Guru & Wali Kelas*, *Wali Asrama*, *Manajemen & TPPK*).
   - Eager-loading relasi penugasan kelas perwalian (`homeroomClasses`) dan asrama binaan (`dormAssignments`).
-  - Lencana penugasan dinamis (misal: `Wali Kelas VII-A`, `Asrama Ibnu Sina`, `Bimbingan Konseling`).
-- **Halaman Legal Khusus Satuan Pendidikan**:
-  - **Kebijakan Privasi (`/kebijakan-privasi`)**: Kepatuhan terhadap UU No. 27/2022 (UU PDP) dan Permendikbudristek No. 46/2023 (PPKSP), hak persetujuan orang tua (*informed consent*), pseudonimisasi, dan audit trail tak terbantahkan.
-  - **Persyaratan Layanan (`/persyaratan-layanan`)**: Standar etika staf, kerahasiaan data kasus anak, larangan tangkapan layar liar ke media sosial/grup perpesanan, dan integritas presensi.
-- **Eliminasi Tuntas Bug Overlap Form & Dropdown**:
-  - Penataan kaskade CSS Tailwind v4 melalui pemisahan `@layer components` dan `@layer utilities` beraturan `!important`.
-  - Terbukti secara matematis via Playwright: jarak teks terhadap ikon input minimal 40px (bebas dari tabrakan ikon).
-  - Dropdown `<select class="field">` memiliki `pr-10 cursor-pointer` sehingga teks opsi tidak tertutup panah chevron browser.
-- **Manajemen Profil & Keamanan Mandiri (`/profil`)**:
-  - Staf dapat memperbarui nama, nomor telepon/WhatsApp, dan mengganti kata sandi dengan verifikasi kata sandi lama serta pencatatan audit.
-- **Presensi Harian Terkoneksi & Deteksi Siswa Hilang**:
-  - Presensi kelas dan kegiatan asrama (apel pagi, makan, apel malam, tidur) dengan deteksi otomatis siswa tidak ditemukan (*missing student*) yang langsung dieskalasikan ke insiden darurat.
-- **Manajemen Insiden & Perlindungan Anak**:
-  - Pelaporan berbasis bahasa fakta teramati, 4 tingkat keparahan, jalur *sangat rahasia* (khusus Kepala Sekolah, TPPK, dan BK), checklist protokol otomatis, dan penambahan rencana aksi mandiri.
-- **Pembinaan Asrama & Logbook Piket**:
-  - Checklist ronde malam, logbook pergantian shift, serah terima pembina, dan catatan kejadian terstruktur.
-- **Laporan Bulanan & Perlindungan Kelompok Kecil**:
-  - Agregasi data dengan ambang batas (*small-group threshold*) untuk mencegah identifikasi anak secara statistik, dilengkapi fasilitas ekspor XLSX ber-audit.
-- **Branding Sekolah Dinamis**:
-  - Kustomisasi nama sekolah, nama aplikasi, tagline, warna utama, dan logo sekolah yang langsung tercermin secara *real-time* di seluruh antarmuka.
+- **Presensi Harian & Deteksi Santri Hilang**:
+  - Pencatatan kehadiran per kelas dan kegiatan asrama (apel pagi, makan, apel malam, jam tidur).
+  - Deteksi otomatis santri tidak ditemukan (*missing student*) yang langsung dieskalasikan ke insiden darurat.
+- **Manajemen Kasus & Perlindungan Anak (TPPK & Kepsek)**:
+  - Pelaporan berbasis bahasa fakta teramati, 4 tingkat keparahan, jalur rahasia (*strictly confidential*).
+  - Rekomendasi checklist protokol penanganan darurat otomatis.
+- **Ronde Asrama & Logbook Pergantian Shift**:
+  - Checklist ronda malam asrama, serah terima piket pembina, dan logbook insiden asrama.
+- **Kepatuhan Hukum Satuan Pendidikan**:
+  - **Kebijakan Privasi (`/kebijakan-privasi`)**: Kepatuhan terhadap UU No. 27/2022 (UU PDP) dan Permendikbudristek No. 46/2023.
+  - **Persyaratan Layanan (`/persyaratan-layanan`)**: Standar etika kerahasiaan data anak bagi seluruh tenaga kependidikan.
+- **Desain Bebas Overlap & Ramah Pengguna**:
+  - Jarak teks terhadap ikon form minimal 40px terbukti matematis via audit visual Playwright.
+  - Dropdown `<select>` memiliki padding kanan yang mencegah tabrakan dengan panah bawaan browser.
 
 ---
 
-## Kesiapan Produksi & Ketahanan Konkurensi (Concurrency-Hardened)
+## ⚡ Pilihan Stack Server: Nginx vs FrankenPHP
 
-SIGAP-SR telah diaudit dan diperkuat terhadap potensi *race condition*, anomali konkurensi, dan celah keamanan produksi:
+SIGAP-SR kini mendukung **dua pilihan server modern** kelas produksi:
 
-```mermaid
-flowchart TD
-    subgraph Request Concurrency Protection
-        Req1["Request A (Simultan)"] --> LockCheck{"Generate ID / Code"}
-        Req2["Request B (Simultan)"] --> LockCheck
-        LockCheck -->|Sequential Attempt| DBTx["DB::transaction()"]
-        DBTx -->|Unique Collision Detected| Retry["Auto-Retry with Jitter (Attempt 1-5)"]
-        Retry -->|Next Sequence Calculated| DBTx
-        DBTx -->|Success| Commit["Database Commit & Audit Log"]
-    end
-```
-
-1. **Bebas Tabrakan Kode Siswa & Nomor Insiden (`Race-Condition Free`)**:
-   - Pembuatan Kode Siswa (`SR-YYYY-XXXX`) dan Nomor Kasus Insiden (`SR-YYYY-XXXX`) dilindungi oleh blok *exponential retry loop* (hingga 5 percobaan dengan jitter milidetik) yang menangkap `UniqueConstraintViolationException` secara mulus. Jika dua staf menekan tombol simpan pada milidetik yang sama, salah satu request akan otomatis mengambil nomor urut berikutnya tanpa melempar galat 500 ke pengguna.
-2. **Integritas Presensi Bersamaan**:
-   - Pencatatan presensi dilindungi transaksi database dengan indeks unik gabungan `['student_id', 'date', 'type']` untuk mencegah duplikasi baris kehadiran siswa pada sesi yang sama.
-3. **Pemisahan Identitas Langsung (Privacy by Design)**:
-   - Data foto dan identitas langsung anak disimpan terpisah di tabel `student_identities`. Data analitik operasional hanya menggunakan kode pseudonim.
-4. **Proteksi Akses Bertingkat (Defense in Depth)**:
-   - Insiden tingkat keparahan tinggi (*severity 3-4*) dan kasus berlabel *sangat rahasia* hanya dapat dibuka oleh peran Kepala Sekolah dan TPPK. Peran lain (termasuk administrator umum) ditolak di level Policy dan Query Scope.
-5. **Rate Limiting & Perlindungan Brute-force**:
-   - Endpoint login diproteksi `throttle:6,1` (maksimal 6 percobaan per menit).
-   - Seluruh form dilindungi CSRF token Laravel murni.
-6. **Audit Trail Tak Terbantahkan (*Immutable Audit Log*)**:
-   - Setiap tindakan pengubahan profil, pembacaan identitas siswa, ekspor data, dan investigasi kasus dicatat otomatis dengan IP address, User Agent, dan cap waktu permanen.
+| Komponen | Stack 1: Nginx + PHP-FPM (Default) | Stack 2: FrankenPHP (Next-Gen Caddy) |
+| :--- | :--- | :--- |
+| **Server Engine** | Nginx Web Server + PHP 8.3 FPM | **FrankenPHP** (Caddy Server berbasis Go) |
+| **Protokol HTTP** | HTTP/1.1 & HTTP/2 | **HTTP/1.1, HTTP/2, dan HTTP/3 (QUIC)** |
+| **Kompresi Stream** | Gzip (Level 6) | **Zstandard (zstd)** + Gzip otomatis |
+| **Sertifikat SSL** | Manual / Certbot Reverse Proxy | **Automatic HTTPS** (Let's Encrypt / ZeroSSL) |
+| **Model Eksekusi** | FastCGI via Unix Socket / TCP | In-Process SAPI / **Worker Mode Ready** |
+| **Perintah Cepat** | `.\deploy-docker.ps1 up` | `.\deploy-docker.ps1 up -Server frankenphp` |
 
 ---
 
-## Teknologi
+## 🛠️ Panduan Deployment Cepat
 
-| Lapisan | Teknologi | Versi |
-|---|---|---|
-| **Backend** | PHP, Laravel Framework | PHP 8.3+, Laravel 13 |
-| **Frontend** | Inertia.js, Vue 3 (Composition API), Lucide Vue | Inertia v3, Vue 3.5+ |
-| **Styling** | Tailwind CSS (Cascade Layers & Custom Utility Defense) | Tailwind CSS v4 |
-| **Build Tool** | Vite | Vite 8 |
-| **Database** | SQLite (Pengembangan), MySQL 8+ / PostgreSQL 15+ (Produksi) | Siap RDBMS |
-| **Testing** | PHPUnit (Backend Feature & Unit), Playwright (E2E & Visual) | PHPUnit 11, Playwright 1.58+ |
-| **PWA** | Web App Manifest, Service Worker, Multi-res ICO | PWA Ready |
-
----
-
-## Persyaratan Sistem
-
-- PHP 8.3 atau lebih baru dengan ekstensi wajib: `pdo`, `pdo_sqlite` (atau `pdo_mysql`/`pdo_pgsql`), `mbstring`, `openssl`, `fileinfo`, `zip`, `gd`, dan `tokenizer`.
-- Composer 2.
-- Node.js 20 LTS atau lebih baru dan npm.
-- Database: SQLite (bawaan lokal) atau MySQL 8.0+ / MariaDB 10.5+ / PostgreSQL 15+.
-- Web Server Produksi: Nginx atau Caddy dengan PHP-FPM, atau Laravel Cloud / FrankenPHP.
-
----
-
-## Panduan Instalasi Lokal
-
-```bash
-# 1. Klon repositori dan pasang dependensi
-git clone https://github.com/rteitch/sigap-sr.git
-cd sigap-sr/sigap-app
-composer install
-npm install
-
-# 2. Siapkan environment file
-copy .env.example .env     # Di Linux/macOS: cp .env.example .env
-php artisan key:generate
-
-# 3. Migrasi database dan isi data awal
-php artisan migrate:fresh --seed
-
-# 4. Buat symlink storage untuk upload logo dan avatar siswa
-php artisan storage:link
-
-# 5. Kompilasi aset frontend
-npm run build
-
-# 6. Jalankan server lokal
-php artisan serve
-```
-
-Aplikasi dapat dibuka di `http://127.0.0.1:8000`.
-
-### Matriks Peran & Akun Demo (Hanya Mode Lokal)
-
-Semua akun demo menggunakan kata sandi: `password`.
-
-| Peran | Akun Demo | Hak Akses Utama |
-|---|---|---|
-| **Administrator** | `admin@sigap.test` | Master data, manajemen guru & staf, branding sekolah, log audit |
-| **Kepala Sekolah** | `kepsek@sigap.test` | Akses kasus sangat rahasia, tindak lanjut insiden 3-4, laporan komprehensif |
-| **TPPK** | `tppk@sigap.test` | Investigasi kasus kekerasan anak, checklist protokol pemulihan |
-| **Guru BK** | `bk@sigap.test` | Catatan konseling terbatas, asesmen perilaku santri |
-| **Wali Kelas** | `walikelas@sigap.test` | Presensi kelas, profil siswa asuhan, rujukan insiden kelas |
-| **Wali Asrama** | `waliasrama@sigap.test` | Presensi asrama, logbook ronda malam, serah terima shift |
-| **Guru** | `guru@sigap.test` | Presensi mapel, pelaporan insiden teramati |
-
-> **Catatan Keamanan Produksi:** Panel demo otomatis nonaktif saat `APP_ENV=production`. Seeder demo menolak berjalan di mode produksi kecuali `SIGAP_ALLOW_DEMO_SEED=true` ditetapkan secara sengaja.
-
----
-
-## Panduan Deployment ke Server Produksi
-
-Ikuti langkah-langkah berikut untuk peluncuran ke lingkungan produksi:
-
-### 1. Konfigurasi Lingkungan (`.env`)
-```dotenv
-APP_NAME="SIGAP-SR"
-APP_ENV=production
-APP_DEBUG=false
-APP_URL=https://sigap.sekolahrakyat.sch.id
-
-# Matikan akun demo dan seeder
-SIGAP_SHOW_DEMO_ACCOUNTS=false
-SIGAP_ALLOW_DEMO_SEED=false
-
-# Database Produksi (Contoh MySQL)
-DB_CONNECTION=mysql
-DB_HOST=127.0.0.1
-DB_PORT=3306
-DB_DATABASE=sigap_sr_prod
-DB_USERNAME=sigap_user
-DB_PASSWORD=KatasandiSangatKuatDanRahasia123!
-
-# Session & Keamanan Cookie
-SESSION_DRIVER=database
-SESSION_LIFETIME=120
-SESSION_ENCRYPT=true
-SESSION_PATH=/
-SESSION_DOMAIN=null
-SESSION_SECURE_COOKIE=true
-
-# Cache & Antrean
-CACHE_STORE=database
-QUEUE_CONNECTION=database
-```
-
-### 2. Panduan Deployment Cepat & Teroptimasi (.ps1 & .sh)
-
-SIGAP-SR menyediakan skrip otomasi deployment yang siap pakai baik untuk **lingkungan lokal native (Baremetal Host)** maupun **lingkungan kontainer terisolasi (Docker)**:
+SIGAP-SR menyediakan skrip otomasi deployment yang siap pakai untuk Windows (PowerShell) maupun Linux/macOS/Server (Bash):
 
 ```
-├── deploy-local.ps1       # Runner lokal teroptimasi untuk Windows PowerShell
-├── deploy-local.sh        # Runner lokal teroptimasi untuk Linux / macOS / WSL
-├── deploy-docker.ps1      # Orkestrasi Docker lengkap untuk Windows PowerShell
-├── deploy-docker.sh       # Orkestrasi Docker lengkap untuk Linux / macOS / WSL
-├── Dockerfile             # Multi-stage build (Node 22 + Composer 2 + PHP 8.3 FPM & Nginx)
-├── docker-compose.yml     # Orkestrasi volume persisten (storage & database)
+├── deploy-local.ps1              # Runner lokal teroptimasi untuk Windows PowerShell
+├── deploy-local.sh               # Runner lokal teroptimasi untuk Linux / macOS / WSL
+├── deploy-docker.ps1             # Orkestrasi Docker (Nginx / FrankenPHP) untuk Windows
+├── deploy-docker.sh              # Orkestrasi Docker (Nginx / FrankenPHP) untuk Linux/macOS
+├── Dockerfile                    # Multi-stage image Nginx + PHP 8.3 FPM (~110MB)
+├── Dockerfile.frankenphp         # Multi-stage image FrankenPHP Caddy (~140MB)
+├── docker-compose.yml            # Orkestrasi Nginx Stack dengan volume persisten
+├── docker-compose.frankenphp.yml # Orkestrasi FrankenPHP Stack (HTTP/3 & zstd)
 └── docker/
-    ├── nginx.conf         # Gzip + Static asset caching agresif + Security headers
-    ├── php.ini            # OPcache 256MB + JIT + Memory limit 256M
-    ├── supervisord.conf   # Pengawas proses Nginx, PHP-FPM, dan Queue Worker
-    └── docker-entrypoint.sh # Otomasi migrasi, storage link, dan pemanasan cache
+    ├── Caddyfile                 # Konfigurasi Caddy untuk FrankenPHP
+    ├── nginx.conf                # Konfigurasi Nginx produksi
+    ├── php.ini                   # OPcache 256MB + JIT + Memory tuning
+    ├── supervisord.conf          # Supervisor process manager
+    ├── docker-entrypoint.sh      # Entrypoint startup Nginx
+    └── frankenphp-entrypoint.sh  # Entrypoint startup FrankenPHP
 ```
 
-#### A. Opsi 1: Deployment Lokal (Baremetal Host)
+### Opsi 1: Menjalankan di Mesin Lokal (Baremetal Host)
 
-Skrip lokal secara otomatis memvalidasi prasyarat (PHP 8.3+, Composer, Node.js), menyiapkan `.env` & SQLite, mengompilasi aset Vite, menjalankan migrasi database, dan mengaktifkan optimasi cache produksi:
+Skrip lokal secara otomatis memvalidasi PHP 8.3+, Composer, Node.js, menyiapkan `.env` & SQLite, mengompilasi aset Vite, menjalankan migrasi database, dan mengaktifkan optimasi cache produksi:
 
 **Di Windows (PowerShell):**
 ```powershell
@@ -242,13 +172,12 @@ Skrip lokal secara otomatis memvalidasi prasyarat (PHP 8.3+, Composer, Node.js),
 # 3. Kustomisasi port dan sertakan database seeder (akun demo)
 .\deploy-local.ps1 -Port 8080 -Seed
 
-# 4. Reset migrasi database dari nol
+# 4. Reset migrasi database dari awal
 .\deploy-local.ps1 -Fresh -Seed
 ```
 
 **Di Linux / macOS / WSL (Bash):**
 ```bash
-# Berikan hak akses eksekusi (jika belum)
 chmod +x deploy-local.sh
 
 # 1. Jalankan mode produksi teroptimasi penuh
@@ -263,88 +192,116 @@ chmod +x deploy-local.sh
 
 ---
 
-#### B. Opsi 2: Deployment Kontainer Docker (Production-Ready)
-
-Deployment Docker menggunakan image multi-stage berbasis Alpine Linux yang sangat ramping (~110MB), dilengkapi Nginx web server, PHP 8.3 FPM dengan OPcache aktif, Laravel Queue Worker, serta volume persisten untuk database dan berkas unggahan:
+### Opsi 2: Menjalankan dengan Docker (Nginx + PHP 8.3 FPM)
 
 **Di Windows (PowerShell):**
 ```powershell
-# 1. Bangun dan jalankan kontainer di background (dilengkapi healthcheck otomatis)
+# Jalankan kontainer dan tunggu healthcheck sehat
 .\deploy-docker.ps1 up
 
-# 2. Periksa status kontainer dan probe kesehatan sistem
+# Cek status kesehatan sistem & probe database/cache/storage
 .\deploy-docker.ps1 status
 
-# 3. Lihat live logs dari Nginx, PHP-FPM, dan Worker
+# Lihat log aktif kontainer
 .\deploy-docker.ps1 logs
 
-# 4. Jalankan perintah artisan di dalam kontainer
+# Jalankan perintah artisan di dalam kontainer
 .\deploy-docker.ps1 artisan "route:list"
 .\deploy-docker.ps1 artisan "tinker"
 
-# 5. Jalankan database seeder
+# Jalankan seeder akun demo
 .\deploy-docker.ps1 seed
 
-# 6. Buka terminal interaktif di dalam kontainer
-.\deploy-docker.ps1 shell
-
-# 7. Hentikan kontainer
+# Hentikan kontainer
 .\deploy-docker.ps1 down
 ```
 
 **Di Linux / macOS / WSL (Bash):**
 ```bash
-# Berikan hak akses eksekusi (jika belum)
 chmod +x deploy-docker.sh
 
-# 1. Bangun dan jalankan kontainer di background
 ./deploy-docker.sh up
-
-# 2. Cek status kesehatan sistem
 ./deploy-docker.sh status
-
-# 3. Pantau log aktif
 ./deploy-docker.sh logs
-
-# 4. Jalankan perintah artisan
 ./deploy-docker.sh artisan route:list
-
-# 5. Hentikan kontainer
 ./deploy-docker.sh down
 ```
 
 ---
 
-### 3. Arsitektur Optimasi Performa & Keamanan
+### Opsi 3: Menjalankan dengan Docker (FrankenPHP Caddy HTTP/3)
 
-| Layer | Optimasi yang Diterapkan | Dampak Performa / Keamanan |
-| :--- | :--- | :--- |
-| **PHP OPcache** | Memory 256MB, Interned Strings 16MB, Max Accelerated Files 20.000, JIT Enabled, `validate_timestamps=0` | Kompilasi bytecode PHP instan tanpa disk I/O berulang di kontainer. |
-| **Nginx Web Server** | Gzip level 6, FastCGI buffer tuning (`16 16k`), unix socket / fastcgi proxy | Pengurangan ukuran payload hingga 70% dan transfer stream cepat. |
-| **Vite Static Assets** | Cache-Control `public, max-age=31536000, immutable` pada `/build/assets/*` | Aset bertanda hash tidak pernah di-fetch ulang oleh browser klien. |
-| **Multi-Stage Build** | Stage Node.js & Composer terpisah; build tools dev tidak ikut masuk ke image runtime | Ukuran image menyusut drastis (~110MB) dan menghilangkan attack-surface dari build tools. |
-| **Supervisord Worker** | Queue worker terkelola (`php artisan queue:work --tries=3`) | Tugas latar belakang seperti pemrosesan laporan & audit log berjalan mulus. |
-| **Volume Persisten** | Named volumes `sigap_sr_storage` dan `sigap_sr_database` | Foto santri dan data database SQLite tidak hilang saat image di-recreate/update. |
-| **Health Probes** | Integrasi endpoint `/up`, `/health/live`, dan `/health/ready` | Pemantauan otomatis status database, cache store, dan storage read/write. |
+Untuk performa puncak dengan dukungan HTTP/3 dan kompresi Zstandard:
+
+**Di Windows (PowerShell):**
+```powershell
+# Jalankan kontainer FrankenPHP
+.\deploy-docker.ps1 up -Server frankenphp
+
+# Cek status kesehatan
+.\deploy-docker.ps1 status -Server frankenphp
+
+# Pantau log aktif FrankenPHP
+.\deploy-docker.ps1 logs -Server frankenphp
+
+# Hentikan kontainer FrankenPHP
+.\deploy-docker.ps1 down -Server frankenphp
+```
+
+**Di Linux / macOS / WSL (Bash):**
+```bash
+./deploy-docker.sh up --server=frankenphp
+./deploy-docker.sh status --server=frankenphp
+./deploy-docker.sh logs --server=frankenphp
+./deploy-docker.sh down --server=frankenphp
+```
 
 ---
 
-## Pengujian & Jaminan Mutu (TDD & Visual Audit)
+## 🔒 Ketahanan Konkurensi & Keamanan Produksi
 
-Aplikasi memiliki rangkaian pengujian otomatis lengkap yang dapat dijalankan kapan saja:
+SIGAP-SR dirancang kebal terhadap tabrakan data dan anomali konkurensi:
+
+```mermaid
+flowchart TD
+    subgraph Request Concurrency Protection
+        Req1["Request A (Simultan)"] --> LockCheck{"Generate ID / Code"}
+        Req2["Request B (Simultan)"] --> LockCheck
+        LockCheck -->|Sequential Attempt| DBTx["DB::transaction()"]
+        DBTx -->|Unique Collision Detected| Retry["Auto-Retry with Jitter (Attempt 1-5)"]
+        Retry -->|Next Sequence Calculated| DBTx
+        DBTx -->|Success| Commit["Database Commit & Audit Log"]
+    end
+```
+
+1. **Bebas Tabrakan Nomor Siswa & Insiden (`Race-Condition Free`)**:
+   - Pembuatan Kode Siswa (`SR-YYYY-XXXX`) dan Nomor Insiden (`SR-YYYY-XXXX`) dilindungi oleh blok *exponential retry loop* (hingga 5 percobaan dengan jitter milidetik) yang menangani `UniqueConstraintViolationException` secara otomatis.
+2. **Integritas Presensi Bersamaan**:
+   - Transaksi database dengan indeks unik gabungan `['student_id', 'date', 'type']` mencegah baris kehadiran ganda santri pada sesi yang sama.
+3. **Pemisahan Identitas Langsung (Privacy by Design)**:
+   - Data foto dan identitas langsung anak disimpan terpisah di tabel `student_identities`. Data analitik operasional hanya menggunakan kode pseudonim.
+4. **Proteksi Hak Akses Bertingkat (Defense in Depth)**:
+   - Insiden keparahan tinggi (*severity 3-4*) dan kasus berlabel *sangat rahasia* hanya dapat diakses oleh Kepala Sekolah dan TPPK.
+5. **Rate Limiting & CSRF**:
+   - Proteksi brute-force login `throttle:6,1` dan CSRF token Laravel murni pada seluruh endpoint mutasi.
+
+---
+
+## 🧪 Pengujian & Jaminan Mutu (TDD & Visual Audit)
+
+Aplikasi memiliki rangkaian pengujian otomatis lengkap:
 
 ```bash
 # 1. Jalankan seluruh suite tes backend (50 tes, 541 assertions)
 php artisan test --compact
 
-# 2. Jalankan tes spesifik fitur baru
+# 2. Jalankan tes spesifik fitur
 php artisan test --filter=StudentPhotoAndIdentityTest
 php artisan test --filter=TeacherManagementAndLegalTest
 php artisan test --filter=ProfileManagementTest
-php artisan test --filter=StudentFormInterconnectivityTest
 
 # 3. Format kode sesuai standar PSR / Laravel Pint
-vendor/bin/pint --format agent
+vendor/bin/pint --dirty --format agent
 
 # 4. Jalankan audit visual Playwright (39 tes E2E pada Desktop & Mobile)
 npx playwright test tests/e2e/screenshot-audit.spec.ts
@@ -357,11 +314,12 @@ npx playwright test tests/e2e/screenshot-audit.spec.ts
   - Nol *render leak* (`undefined`, `null`, `NaN`, `[object Object]`).
   - Nol tabrakan antara ikon dan teks input pada seluruh formulir.
   - Seluruh tombol memiliki nama aksesibel (*a11y compliant*).
-  - 40 arsip screenshot tersimpan di `storage/app/screenshots/desktop/` dan `mobile/`.
 
 ---
 
-## Lisensi & Kontribusi
+## 📄 Lisensi & Pemeliharaan
 
-Proyek ini dirilis di bawah lisensi terbuka [MIT License](LICENSE).
-Dikembangkan dengan dedikasi penuh untuk keamanan, harkat, dan masa depan anak-anak di Sekolah Rakyat.
+Proyek ini dirilis di bawah lisensi terbuka [MIT License](LICENSE).  
+Didedikasikan penuh untuk perlindungan, keselamatan, harkat, dan masa depan anak-anak di Sekolah Rakyat.
+
+Dikembangkan oleh **Rizal Taufiq Hidayat** ([GitHub: @rteitch](https://github.com/rteitch)).

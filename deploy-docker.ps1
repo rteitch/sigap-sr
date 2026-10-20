@@ -38,11 +38,14 @@ param(
     [string[]]$CommandArgs,
 
     [int]$Port = 8000,
+    [ValidateSet('nginx', 'frankenphp')]
+    [string]$Server = 'nginx',
     [switch]$Build,
     [switch]$Seed
 )
 
 $ErrorActionPreference = 'Stop'
+$composeFile = if ($Server -eq 'frankenphp') { "docker-compose.frankenphp.yml" } else { "docker-compose.yml" }
 
 function Write-Step {
     param([string]$Text)
@@ -86,18 +89,19 @@ switch ($Action.ToLower()) {
     { $_ -in 'up', 'start' } {
         Write-Host @"
 ========================================================================
-   SIGAP-SR — Menjalankan Layanan Docker Container
+   SIGAP-SR — Menjalankan Layanan Docker Container ($Server)
 ========================================================================
 Host Port : $Port
+Server    : $Server ($composeFile)
 "@ -ForegroundColor DarkCyan
 
         if ($Build) {
-            Write-Step "Mem-build image Docker SIGAP-SR..."
-            docker compose build
+            Write-Step "Mem-build image Docker SIGAP-SR ($Server)..."
+            docker compose -f $composeFile build
         }
 
         Write-Step "Memulai container di background (detached mode)..."
-        docker compose up -d
+        docker compose -f $composeFile up -d
 
         Write-Step "Menunggu kontainer inisialisasi dan sehat (healthcheck probe)..."
         $containerName = "sigap-sr-app"
@@ -147,26 +151,26 @@ Tips:
     }
 
     { $_ -in 'down', 'stop' } {
-        Write-Step "Menghentikan dan menghapus kontainer SIGAP-SR..."
-        docker compose down
+        Write-Step "Menghentikan dan menghapus kontainer SIGAP-SR ($Server)..."
+        docker compose -f $composeFile down
         Write-Success "Kontainer berhasil dimatikan dengan aman."
     }
 
     'restart' {
-        Write-Step "Merestart kontainer SIGAP-SR..."
-        docker compose restart
+        Write-Step "Merestart kontainer SIGAP-SR ($Server)..."
+        docker compose -f $composeFile restart
         Write-Success "Kontainer telah direstart."
     }
 
     'build' {
-        Write-Step "Mem-build ulang image Docker SIGAP-SR (clean build)..."
-        docker compose build --no-cache
+        Write-Step "Mem-build ulang image Docker SIGAP-SR ($Server clean build)..."
+        docker compose -f $composeFile build --no-cache
         Write-Success "Build selesai."
     }
 
     'logs' {
-        Write-Step "Menampilkan log aktif SIGAP-SR (Tekan Ctrl+C untuk keluar)..."
-        docker compose logs -f app
+        Write-Step "Menampilkan log aktif SIGAP-SR ($Server)... (Tekan Ctrl+C untuk keluar)"
+        docker compose -f $composeFile logs -f app
     }
 
     'artisan' {
@@ -174,30 +178,30 @@ Tips:
             Write-Failure "Harap sertakan perintah artisan. Contoh: .\deploy-docker.ps1 artisan 'route:list'"
         }
         $cmd = $CommandArgs -join ' '
-        Write-Step "Mengeksekusi di dalam kontainer: php artisan $cmd"
-        docker compose exec app php artisan $CommandArgs
+        Write-Step "Mengeksekusi di dalam kontainer ($Server): php artisan $cmd"
+        docker compose -f $composeFile exec app php artisan $CommandArgs
     }
 
     'migrate' {
-        Write-Step "Menjalankan migrasi database di dalam kontainer..."
-        docker compose exec app php artisan migrate --force
+        Write-Step "Menjalankan migrasi database di dalam kontainer ($Server)..."
+        docker compose -f $composeFile exec app php artisan migrate --force
         Write-Success "Migrasi database selesai."
     }
 
     'seed' {
-        Write-Step "Menjalankan database seeder di dalam kontainer..."
-        docker compose exec app php artisan db:seed --force
+        Write-Step "Menjalankan database seeder di dalam kontainer ($Server)..."
+        docker compose -f $composeFile exec app php artisan db:seed --force
         Write-Success "Database seeder selesai."
     }
 
     'shell' {
-        Write-Step "Membuka interaktif shell di dalam kontainer..."
-        docker compose exec -it app sh
+        Write-Step "Membuka interaktif shell di dalam kontainer ($Server)..."
+        docker compose -f $composeFile exec -it app sh
     }
 
     'status' {
-        Write-Step "Status Kontainer SIGAP-SR:"
-        docker compose ps
+        Write-Step "Status Kontainer SIGAP-SR ($Server):"
+        docker compose -f $composeFile ps
         Write-Host ""
         try {
             $health = Invoke-RestMethod -Uri "http://127.0.0.1:$Port/health/ready" -TimeoutSec 3 -ErrorAction SilentlyContinue
@@ -213,19 +217,23 @@ Tips:
     'help' {
         Write-Host @"
 Penggunaan:
-    .\deploy-docker.ps1 [Aksi] [-Port 8000] [-Build] [-Seed]
+    .\deploy-docker.ps1 [Aksi] [-Server nginx|frankenphp] [-Port 8000] [-Build] [-Seed]
 
 Daftar Aksi:
     up       : Menjalankan kontainer di background dan memeriksa kesehatan sistem.
     down     : Menghentikan seluruh layanan kontainer.
     restart  : Merestart kontainer.
     build    : Mem-build ulang image Docker tanpa cache.
-    logs     : Menampilkan live stream log dari Nginx, PHP-FPM, dan Worker.
+    logs     : Menampilkan live stream log dari server dan worker.
     artisan  : Menjalankan perintah artisan (contoh: .\deploy-docker.ps1 artisan 'tinker').
     migrate  : Menjalankan migrasi database di kontainer.
     seed     : Menjalankan database seeder di kontainer.
     shell    : Membuka terminal interaktif di dalam kontainer.
     status   : Memeriksa status proses dan probe kesehatan database/cache/storage.
+
+Pilihan Server:
+    -Server nginx       : Menggunakan Nginx + PHP 8.3 FPM + Supervisord (Default)
+    -Server frankenphp  : Menggunakan FrankenPHP Caddy Server (HTTP/3 & Zstandard)
 "@ -ForegroundColor Yellow
     }
 }

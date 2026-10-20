@@ -1,0 +1,46 @@
+services:
+  app:
+    container_name: sigap-sr-frankenphp
+    build:
+      context: .
+      dockerfile: Dockerfile.frankenphp
+    restart: unless-stopped
+    ports:
+      - "${APP_PORT:-8000}:80"
+      - "${APP_SSL_PORT:-8443}:443"
+      - "${APP_SSL_PORT:-8443}:443/udp" # HTTP/3 QUIC
+    environment:
+      APP_NAME: "${APP_NAME:-SIGAP-SR}"
+      APP_ENV: "${APP_ENV:-production}"
+      APP_KEY: "${APP_KEY:-}"
+      APP_DEBUG: "${APP_DEBUG:-false}"
+      APP_URL: "${APP_URL:-http://localhost:8000}"
+      APP_TIMEZONE: "Asia/Jakarta"
+      DB_CONNECTION: "${DB_CONNECTION:-sqlite}"
+      SESSION_DRIVER: "${SESSION_DRIVER:-database}"
+      QUEUE_CONNECTION: "${QUEUE_CONNECTION:-database}"
+      CACHE_STORE: "${CACHE_STORE:-database}"
+      RUN_SEEDER: "${RUN_SEEDER:-false}"
+      SIGAP_SHOW_DEMO_ACCOUNTS: "${SIGAP_SHOW_DEMO_ACCOUNTS:-true}"
+      SERVER_NAME: "${SERVER_NAME:-:80}"
+    volumes:
+      - sigap_storage:/var/www/html/storage
+      - sigap_database:/var/www/html/database
+      - caddy_data:/data
+      - caddy_config:/config
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://127.0.0.1/up"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 25s
+
+volumes:
+  sigap_storage:
+    name: sigap_sr_storage
+  sigap_database:
+    name: sigap_sr_database
+  caddy_data:
+    name: sigap_sr_caddy_data
+  caddy_config:
+    name: sigap_sr_caddy_config

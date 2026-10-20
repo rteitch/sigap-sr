@@ -6,6 +6,7 @@ set -e
 
 ACTION="up"
 PORT=8000
+SERVER="nginx"
 FORCE_BUILD=false
 RUN_SEED=false
 EXTRA_ARGS=()
@@ -32,6 +33,9 @@ while [[ "$#" -gt 0 ]]; do
         --port=*)
             PORT="${1#*=}"
             ;;
+        --server=*)
+            SERVER="${1#*=}"
+            ;;
         --build)
             FORCE_BUILD=true
             ;;
@@ -53,6 +57,12 @@ if ! docker info &>/dev/null; then
     fail "Docker tidak aktif atau daemon Docker belum berjalan."
 fi
 
+if [ "$SERVER" = "frankenphp" ]; then
+    COMPOSE_FILE="docker-compose.frankenphp.yml"
+else
+    COMPOSE_FILE="docker-compose.yml"
+fi
+
 export APP_PORT="${PORT}"
 if [ "$RUN_SEED" = true ]; then
     export RUN_SEEDER="true"
@@ -62,18 +72,19 @@ case "$ACTION" in
     up|start)
         echo -e "${C_CYAN}"
         echo "========================================================================"
-        echo "   SIGAP-SR — Menjalankan Layanan Docker Container"
+        echo "   SIGAP-SR — Menjalankan Layanan Docker Container (${SERVER})"
         echo "========================================================================"
         echo "Host Port : ${PORT}"
+        echo "Server    : ${SERVER} (${COMPOSE_FILE})"
         echo -e "${C_RESET}"
 
         if [ "$FORCE_BUILD" = true ]; then
-            step "Mem-build image Docker SIGAP-SR..."
-            docker compose build
+            step "Mem-build image Docker SIGAP-SR (${SERVER})..."
+            docker compose -f "${COMPOSE_FILE}" build
         fi
 
         step "Memulai container di background (detached mode)..."
-        docker compose up -d
+        docker compose -f "${COMPOSE_FILE}" up -d
 
         step "Menunggu kontainer inisialisasi dan sehat (healthcheck probe)..."
         MAX_RETRIES=25
@@ -94,75 +105,75 @@ case "$ACTION" in
         if [ "$IS_READY" = true ]; then
             success "Kontainer aktif dan merespons dengan status 200 OK!"
             echo -e "\n${C_GREEN}========================================================================"
-            echo "   SIGAP-SR DOCKER SIAP DIGUNAKAN!"
+            echo "   SIGAP-SR DOCKER SIAP DIGUNAKAN! (${SERVER})"
             echo "========================================================================"
             echo "   URL Aplikasi : http://localhost:${PORT}"
-            echo "   Port Forward : ${PORT} -> 80 (Nginx + PHP 8.3 FPM)"
+            echo "   Server Stack : ${SERVER} (${COMPOSE_FILE})"
             echo "   Storage Vol  : sigap_sr_storage (foto siswa & asset dinamis)"
             echo "   Database Vol : sigap_sr_database (SQLite terenkapsulasi)"
             echo "========================================================================"
             echo "Tips:"
-            echo "  - Lihat log live    : ./deploy-docker.sh logs"
-            echo "  - Jalankan artisan  : ./deploy-docker.sh artisan <perintah>"
-            echo "  - Cek status sistem : ./deploy-docker.sh status"
-            echo "  - Matikan kontainer : ./deploy-docker.sh down"
+            echo "  - Lihat log live    : ./deploy-docker.sh logs --server=${SERVER}"
+            echo "  - Jalankan artisan  : ./deploy-docker.sh artisan <perintah> --server=${SERVER}"
+            echo "  - Cek status sistem : ./deploy-docker.sh status --server=${SERVER}"
+            echo "  - Matikan kontainer : ./deploy-docker.sh down --server=${SERVER}"
             echo -e "========================================================================${C_RESET}\n"
         else
-            warn "Kontainer sedang boot atau memerlukan waktu lebih lama. Cek log dengan: ./deploy-docker.sh logs"
+            warn "Kontainer sedang boot atau memerlukan waktu lebih lama. Cek log dengan: ./deploy-docker.sh logs --server=${SERVER}"
         fi
         ;;
 
     down|stop)
-        step "Menghentikan dan menghapus kontainer SIGAP-SR..."
-        docker compose down
+        step "Menghentikan dan menghapus kontainer SIGAP-SR (${SERVER})..."
+        docker compose -f "${COMPOSE_FILE}" down
         success "Kontainer berhasil dimatikan dengan aman."
         ;;
 
     restart)
-        step "Merestart kontainer SIGAP-SR..."
-        docker compose restart
+        step "Merestart kontainer SIGAP-SR (${SERVER})..."
+        docker compose -f "${COMPOSE_FILE}" restart
         success "Kontainer telah direstart."
         ;;
 
     build)
-        step "Mem-build ulang image Docker SIGAP-SR (clean build)..."
-        docker compose build --no-cache
+        step "Mem-build ulang image Docker SIGAP-SR (${SERVER} clean build)..."
+        docker compose -f "${COMPOSE_FILE}" build --no-cache
         success "Build selesai."
         ;;
 
     logs)
-        step "Menampilkan log aktif SIGAP-SR (Tekan Ctrl+C untuk keluar)..."
-        docker compose logs -f app
+        step "Menampilkan log aktif SIGAP-SR (${SERVER})... (Tekan Ctrl+C untuk keluar)"
+        docker compose -f "${COMPOSE_FILE}" logs -f app
         ;;
 
     artisan)
         if [ "${#EXTRA_ARGS[@]}" -eq 0 ]; then
             fail "Harap sertakan perintah artisan. Contoh: ./deploy-docker.sh artisan route:list"
         fi
-        step "Mengeksekusi di dalam kontainer: php artisan ${EXTRA_ARGS[*]}"
-        docker compose exec app php artisan "${EXTRA_ARGS[@]}"
+        step "Mengeksekusi di dalam kontainer (${SERVER}): php artisan ${EXTRA_ARGS[*]}"
+        docker compose -f "${COMPOSE_FILE}" exec app php artisan "${EXTRA_ARGS[@]}"
         ;;
 
     migrate)
-        step "Menjalankan migrasi database di dalam kontainer..."
-        docker compose exec app php artisan migrate --force
+        step "Menjalankan migrasi database di dalam kontainer (${SERVER})..."
+        docker compose -f "${COMPOSE_FILE}" exec app php artisan migrate --force
         success "Migrasi database selesai."
         ;;
 
     seed)
-        step "Menjalankan database seeder di dalam kontainer..."
-        docker compose exec app php artisan db:seed --force
+        step "Menjalankan database seeder di dalam kontainer (${SERVER})..."
+        docker compose -f "${COMPOSE_FILE}" exec app php artisan db:seed --force
         success "Database seeder selesai."
         ;;
 
     shell)
-        step "Membuka interaktif shell di dalam kontainer..."
-        docker compose exec app sh
+        step "Membuka interaktif shell di dalam kontainer (${SERVER})..."
+        docker compose -f "${COMPOSE_FILE}" exec app sh
         ;;
 
     status)
-        step "Status Kontainer SIGAP-SR:"
-        docker compose ps
+        step "Status Kontainer SIGAP-SR (${SERVER}):"
+        docker compose -f "${COMPOSE_FILE}" ps
         echo ""
         if curl -s -f "http://127.0.0.1:${PORT}/health/ready" &>/dev/null; then
             success "Endpoint /health/ready : OK"
@@ -181,7 +192,7 @@ case "$ACTION" in
         echo "  down     : Hentikan dan bersihkan kontainer"
         echo "  restart  : Restart kontainer aplikasi"
         echo "  build    : Rebuild image Docker tanpa cache"
-        echo "  logs     : Tampilkan live log Nginx, PHP-FPM, dan Worker"
+        echo "  logs     : Tampilkan live log server dan worker"
         echo "  artisan  : Jalankan perintah artisan di kontainer (contoh: ./deploy-docker.sh artisan tinker)"
         echo "  migrate  : Jalankan migrasi database di kontainer"
         echo "  seed     : Jalankan database seeder di kontainer"
@@ -189,8 +200,9 @@ case "$ACTION" in
         echo "  status   : Periksa status kontainer dan probe kesehatan sistem"
         echo ""
         echo "Opsi:"
-        echo "  --port=8000   Port host yang diexpose (default: 8000)"
-        echo "  --build       Paksa build ulang image sebelum 'up'"
-        echo "  --seed        Jalankan seeder saat kontainer 'up'"
+        echo "  --server=nginx|frankenphp  Pilih stack server (default: nginx)"
+        echo "  --port=8000                Port host yang diexpose (default: 8000)"
+        echo "  --build                    Paksa build ulang image sebelum 'up'"
+        echo "  --seed                     Jalankan seeder saat kontainer 'up'"
         ;;
 esac
