@@ -209,57 +209,123 @@ CACHE_STORE=database
 QUEUE_CONNECTION=database
 ```
 
-### 2. Optimasi & Caching Produksi
-Jalankan perintah berikut pada server:
+### 2. Panduan Deployment Cepat & Teroptimasi (.ps1 & .sh)
+
+SIGAP-SR menyediakan skrip otomasi deployment yang siap pakai baik untuk **lingkungan lokal native (Baremetal Host)** maupun **lingkungan kontainer terisolasi (Docker)**:
+
+```
+├── deploy-local.ps1       # Runner lokal teroptimasi untuk Windows PowerShell
+├── deploy-local.sh        # Runner lokal teroptimasi untuk Linux / macOS / WSL
+├── deploy-docker.ps1      # Orkestrasi Docker lengkap untuk Windows PowerShell
+├── deploy-docker.sh       # Orkestrasi Docker lengkap untuk Linux / macOS / WSL
+├── Dockerfile             # Multi-stage build (Node 22 + Composer 2 + PHP 8.3 FPM & Nginx)
+├── docker-compose.yml     # Orkestrasi volume persisten (storage & database)
+└── docker/
+    ├── nginx.conf         # Gzip + Static asset caching agresif + Security headers
+    ├── php.ini            # OPcache 256MB + JIT + Memory limit 256M
+    ├── supervisord.conf   # Pengawas proses Nginx, PHP-FPM, dan Queue Worker
+    └── docker-entrypoint.sh # Otomasi migrasi, storage link, dan pemanasan cache
+```
+
+#### A. Opsi 1: Deployment Lokal (Baremetal Host)
+
+Skrip lokal secara otomatis memvalidasi prasyarat (PHP 8.3+, Composer, Node.js), menyiapkan `.env` & SQLite, mengompilasi aset Vite, menjalankan migrasi database, dan mengaktifkan optimasi cache produksi:
+
+**Di Windows (PowerShell):**
+```powershell
+# 1. Jalankan mode produksi teroptimasi penuh (Default: port 8000)
+.\deploy-local.ps1
+
+# 2. Jalankan mode development dengan hot-reload
+.\deploy-local.ps1 -Mode Development
+
+# 3. Kustomisasi port dan sertakan database seeder (akun demo)
+.\deploy-local.ps1 -Port 8080 -Seed
+
+# 4. Reset migrasi database dari nol
+.\deploy-local.ps1 -Fresh -Seed
+```
+
+**Di Linux / macOS / WSL (Bash):**
 ```bash
-# 1. Jalankan migrasi database
-php artisan migrate --force
+# Berikan hak akses eksekusi (jika belum)
+chmod +x deploy-local.sh
 
-# 2. Buat symlink berkas publik
-php artisan storage:link
+# 1. Jalankan mode produksi teroptimasi penuh
+./deploy-local.sh
 
-# 3. Kompilasi aset Vite untuk produksi
-npm ci
-npm run build
+# 2. Jalankan mode development (hot-reload)
+./deploy-local.sh --mode=dev
 
-# 4. Optimasi cache Laravel
-php artisan config:cache
-php artisan route:cache
-php artisan view:cache
-php artisan event:cache
+# 3. Kustomisasi port dan seeder
+./deploy-local.sh --port=8080 --seed
 ```
 
-### 3. Konfigurasi Web Server (Nginx)
-Pastikan Nginx mengarahkan root direktori ke folder `public/`:
-```nginx
-server {
-    listen 443 ssl http2;
-    server_name sigap.sekolahrakyat.sch.id;
-    root /var/www/sigap-sr/sigap-app/public;
+---
 
-    index index.php;
-    client_max_body_size 10M;
+#### B. Opsi 2: Deployment Kontainer Docker (Production-Ready)
 
-    add_header X-Frame-Options "SAMEORIGIN";
-    add_header X-Content-Type-Options "nosniff";
-    add_header X-XSS-Protection "1; mode=block";
-    add_header Referrer-Policy "strict-origin-when-cross-origin";
+Deployment Docker menggunakan image multi-stage berbasis Alpine Linux yang sangat ramping (~110MB), dilengkapi Nginx web server, PHP 8.3 FPM dengan OPcache aktif, Laravel Queue Worker, serta volume persisten untuk database dan berkas unggahan:
 
-    location / {
-        try_files $uri $uri/ /index.php?$query_string;
-    }
+**Di Windows (PowerShell):**
+```powershell
+# 1. Bangun dan jalankan kontainer di background (dilengkapi healthcheck otomatis)
+.\deploy-docker.ps1 up
 
-    location ~ \.php$ {
-        fastcgi_pass unix:/var/run/php/php8.3-fpm.sock;
-        fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
-        include fastcgi_params;
-    }
+# 2. Periksa status kontainer dan probe kesehatan sistem
+.\deploy-docker.ps1 status
 
-    location ~ /\.(?!well-known).* {
-        deny all;
-    }
-}
+# 3. Lihat live logs dari Nginx, PHP-FPM, dan Worker
+.\deploy-docker.ps1 logs
+
+# 4. Jalankan perintah artisan di dalam kontainer
+.\deploy-docker.ps1 artisan "route:list"
+.\deploy-docker.ps1 artisan "tinker"
+
+# 5. Jalankan database seeder
+.\deploy-docker.ps1 seed
+
+# 6. Buka terminal interaktif di dalam kontainer
+.\deploy-docker.ps1 shell
+
+# 7. Hentikan kontainer
+.\deploy-docker.ps1 down
 ```
+
+**Di Linux / macOS / WSL (Bash):**
+```bash
+# Berikan hak akses eksekusi (jika belum)
+chmod +x deploy-docker.sh
+
+# 1. Bangun dan jalankan kontainer di background
+./deploy-docker.sh up
+
+# 2. Cek status kesehatan sistem
+./deploy-docker.sh status
+
+# 3. Pantau log aktif
+./deploy-docker.sh logs
+
+# 4. Jalankan perintah artisan
+./deploy-docker.sh artisan route:list
+
+# 5. Hentikan kontainer
+./deploy-docker.sh down
+```
+
+---
+
+### 3. Arsitektur Optimasi Performa & Keamanan
+
+| Layer | Optimasi yang Diterapkan | Dampak Performa / Keamanan |
+| :--- | :--- | :--- |
+| **PHP OPcache** | Memory 256MB, Interned Strings 16MB, Max Accelerated Files 20.000, JIT Enabled, `validate_timestamps=0` | Kompilasi bytecode PHP instan tanpa disk I/O berulang di kontainer. |
+| **Nginx Web Server** | Gzip level 6, FastCGI buffer tuning (`16 16k`), unix socket / fastcgi proxy | Pengurangan ukuran payload hingga 70% dan transfer stream cepat. |
+| **Vite Static Assets** | Cache-Control `public, max-age=31536000, immutable` pada `/build/assets/*` | Aset bertanda hash tidak pernah di-fetch ulang oleh browser klien. |
+| **Multi-Stage Build** | Stage Node.js & Composer terpisah; build tools dev tidak ikut masuk ke image runtime | Ukuran image menyusut drastis (~110MB) dan menghilangkan attack-surface dari build tools. |
+| **Supervisord Worker** | Queue worker terkelola (`php artisan queue:work --tries=3`) | Tugas latar belakang seperti pemrosesan laporan & audit log berjalan mulus. |
+| **Volume Persisten** | Named volumes `sigap_sr_storage` dan `sigap_sr_database` | Foto santri dan data database SQLite tidak hilang saat image di-recreate/update. |
+| **Health Probes** | Integrasi endpoint `/up`, `/health/live`, dan `/health/ready` | Pemantauan otomatis status database, cache store, dan storage read/write. |
 
 ---
 

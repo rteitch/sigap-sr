@@ -1,0 +1,44 @@
+# Git & Documentation
+.git
+.github
+.gitignore
+.gitattributes
+
+# Environment & Credentials
+.env
+.env.backup
+.env.production
+auth.json
+
+# Local Build & Dependencies (will be freshly built in container stages)
+node_modules
+vendor
+public/build
+public/hot
+
+# Test & E2E artifacts
+.auth
+playwright-report
+test-results
+storage/app/screenshots
+.phpunit.result.cache
+.phpunit.cache
+tests
+
+# Runtime Storage & Logs
+storage/logs/*.log
+storage/framework/cache/data/*
+storage/framework/sessions/*
+storage/framework/views/*
+storage/app/public/*
+database/*.sqlite*
+bootstrap/cache/*.php
+
+# IDEs & OS files
+.idea
+.vscode
+.zed
+.codex
+.cursor
+.DS_Store
+Thumbs.db
