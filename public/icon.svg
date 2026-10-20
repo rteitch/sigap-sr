@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="SIGAP-SR">
+  <rect width="512" height="512" rx="96" fill="#0f766e"/>
+  <circle cx="400" cy="432" r="230" fill="#ffffff" opacity="0.08"/>
+  <circle cx="96" cy="72" r="130" fill="#ffffff" opacity="0.06"/>
+  <path d="M256 96l112 46v104c0 82-48 145-112 170-64-25-112-88-112-170V142l112-46z" fill="#ffffff" opacity="0.12"/>
+  <text x="256" y="268" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="176" font-weight="700" fill="#ffffff">SR</text>
+  <text x="256" y="354" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="42" font-weight="700" letter-spacing="8" fill="#ffffff" opacity="0.85">SIGAP</text>
+</svg>
